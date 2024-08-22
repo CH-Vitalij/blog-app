@@ -1,0 +1,33 @@
+.header {
+  height: 80px;
+  background-color: #ffffff;
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    gap: 19px;
+    padding: 0 22px;
+  }
+
+  &__nav-item {
+    font-family: "Inter UI", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: left;
+    color: rgba(#000000d9, 0.85);
+    text-decoration: none;
+
+    &_left {
+      flex: auto;
+    }
+
+    &_right {
+      border: 1px solid #52c41a;
+      border-radius: 5px;
+      padding: 6px 18.7px 10px 18.7px;
+      color: #52c41a;
+    }
+  }
+}
