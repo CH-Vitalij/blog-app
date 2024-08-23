@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import "../styles/index.scss";
+import "../assets/styles/index.scss";
 
 import ArticlesPage from "./pages/ArticlesPage";
 import HomePage from "./pages/HomePage";

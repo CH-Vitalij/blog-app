@@ -1,0 +1,84 @@
+.articles {
+  font-family: "Inter UI", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+
+  &__item {
+    margin-bottom: 26px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 12px 0px #00000026;
+    padding: 15px 14px 24px 16px !important;
+  }
+
+  &__item-body {
+    display: flex;
+    justify-content: space-between;
+    gap: 85px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
+  }
+
+  &__item-body-title {
+    display: inline-block;
+    width: 160px;
+    height: 28px;
+    color: #1890ff !important;
+    font-family: inherit;
+    font-size: 20px !important;
+    line-height: 28px !important;
+    font-weight: 400 !important;
+    margin: 0px 13px 4px 0px !important;
+  }
+
+  &__item-body-btn {
+    width: 34px;
+    height: 22px;
+    line-height: 22px;
+    font-family: inherit;
+    font-size: inherit;
+    color: rgba(0, 0, 0, 0.75);
+  }
+
+  &__item-body-tag {
+    line-height: 16px;
+    color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+    width: 38px;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0px 0px 4px 0px;
+  }
+
+  &__item-body-paragraph {
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.75);
+    margin: 0px !important;
+    text-align: left;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  &__item-body-author-data {
+    display: flex;
+    max-width: 141px;
+    max-height: 46px;
+  }
+
+  &__item-body-author-data-name {
+    width: 81px;
+    height: 28px;
+    font-size: 18px;
+    line-height: 28px;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  &__item-body-author-data-date {
+    width: 83px;
+    height: 22px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
