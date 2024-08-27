@@ -1,12 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Articles } from "../types/articlesTypes";
+import { ArticlesRequest } from "../types/articlesTypes";
 
 export const articlesApi = createApi({
   reducerPath: "articlesApi",
   baseQuery: fetchBaseQuery({ baseUrl: "https://blog.kata.academy/api/" }),
   endpoints: (builder) => ({
-    getArticles: builder.query<Articles[], string>({
-      query: (limit = "") => `articles?${limit && `limit=${limit}`}`,
+    getArticles: builder.query<ArticlesRequest, { limit: string; offset: number }>({
+      query: ({ limit = "", offset = 0 }) =>
+        `articles?${limit && `limit=${limit}&${offset && `offset=${offset}`}`}`,
     }),
   }),
 });

@@ -2,24 +2,24 @@ import { HeartOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Typography, Tag } from "antd";
 import classes from "./ArticlesList.module.scss";
 import { useGetArticlesQuery } from "../../service/articles-api";
+import { useState } from "react";
 
 const ArticlesList = () => {
-  const dataTest = Array.from({ length: 25 }).map((_, i) => ({
-    title: "Some article title",
-    avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
-    description: "Tag1",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
-    name: "John Doe",
-    birthDate: "March 5, 2020",
-  }));
+  const [pageNum, setPage] = useState(1);
 
-  const { data = [], isLoading, isError } = useGetArticlesQuery('5');
-  console.log("data", data);
+  const {
+    data = { articles: [], articlesCount: 0 },
+    isFetching,
+    isError,
+  } = useGetArticlesQuery({ limit: "5", offset: (pageNum - 1) * 5 });
 
-  if (isLoading) return <h1>Loading...</h1>;
+  console.log(isFetching);
+
+  if (isFetching) return <h1>Loading...</h1>;
 
   if (isError) return <h1>Error!!!</h1>;
+
+  console.log("data", data);
 
   return (
     <div style={{ padding: "26px 251px 17px 251px" }}>
@@ -28,14 +28,18 @@ const ArticlesList = () => {
         itemLayout="vertical"
         pagination={{
           onChange: (page) => {
-            console.log(page);
+            setPage(page);
           },
+          current: pageNum,
           pageSize: 5,
+          total: data.articlesCount,
           align: "center",
+          hideOnSinglePage: true,
+          showSizeChanger: false,
         }}
-        dataSource={dataTest}
+        dataSource={data.articles}
         renderItem={(item) => (
-          <List.Item key={item.title} className={`${classes.articlesItem}`}>
+          <List.Item key={item.slug} className={`${classes.articlesItem}`}>
             <div className={`${classes.articlesItemBody}`}>
               <div style={{ maxWidth: "682px" }}>
                 <Typography.Title className={`${classes.articlesItemBodyTitle}`} level={5}>
@@ -54,20 +58,20 @@ const ArticlesList = () => {
                   12
                 </Button>
                 <div>
-                  <Tag className={`${classes.articlesItemBodyTag}`}>{item.description}</Tag>
+                  <Tag className={`${classes.articlesItemBodyTag}`}>{item.tagList[0]}</Tag>
                 </div>
                 <Typography.Paragraph className={`${classes.articlesItemBodyParagraph}`}>
-                  {item.content}
+                  {item.body}
                 </Typography.Paragraph>
               </div>
               <div className={`${classes.articlesItemBodyAuthorData}`}>
                 <div>
-                  <div className={`${classes.articlesItemBodyAuthorDataName}`}>{item.name}</div>
-                  <div className={`${classes.articlesItemBodyAuthorDataDate}`}>
-                    {item.birthDate}
+                  <div className={`${classes.articlesItemBodyAuthorDataName}`}>
+                    {item.author.username}
                   </div>
+                  <div className={`${classes.articlesItemBodyAuthorDataDate}`}>March 5, 2020</div>
                 </div>
-                <Avatar src={item.avatar} size={46} />
+                <Avatar src={item.author.image} size={46} />
               </div>
             </div>
           </List.Item>
