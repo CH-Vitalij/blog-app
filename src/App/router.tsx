@@ -12,6 +12,7 @@ import { store } from "../store";
 import "../assets/styles/index.scss";
 
 import ArticlesPage from "./pages/ArticlesPage";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -21,6 +22,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<HomePage />}>
       <Route index element={<ArticlesPage />} />
       <Route path="articles" element={<Navigate to={"/"} replace />} />
+      <Route path="articles/:slug" element={<ArticleDetailPage />} />
       <Route path="sign-in" element={<SignInPage />} />
       <Route path="sign-up" element={<SignUpPage />} />
     </Route>,
