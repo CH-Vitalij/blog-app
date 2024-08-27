@@ -1,9 +1,10 @@
 import { HeartOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Typography, Tag } from "antd";
 import classes from "./ArticlesList.module.scss";
+import { useGetArticlesQuery } from "../../service/articles-api";
 
 const ArticlesList = () => {
-  const data = Array.from({ length: 25 }).map((_, i) => ({
+  const dataTest = Array.from({ length: 25 }).map((_, i) => ({
     title: "Some article title",
     avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
     description: "Tag1",
@@ -12,6 +13,13 @@ const ArticlesList = () => {
     name: "John Doe",
     birthDate: "March 5, 2020",
   }));
+
+  const { data = [], isLoading, isError } = useGetArticlesQuery('5');
+  console.log("data", data);
+
+  if (isLoading) return <h1>Loading...</h1>;
+
+  if (isError) return <h1>Error!!!</h1>;
 
   return (
     <div style={{ padding: "26px 251px 17px 251px" }}>
@@ -25,7 +33,7 @@ const ArticlesList = () => {
           pageSize: 5,
           align: "center",
         }}
-        dataSource={data}
+        dataSource={dataTest}
         renderItem={(item) => (
           <List.Item key={item.title} className={`${classes.articlesItem}`}>
             <div className={`${classes.articlesItemBody}`}>

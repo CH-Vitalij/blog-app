@@ -6,6 +6,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "../store";
 
 import "../assets/styles/index.scss";
 
@@ -28,4 +30,8 @@ const router = createBrowserRouter(
   },
 );
 
-createRoot(document.getElementById("root")!).render(<RouterProvider router={router} />);
+createRoot(document.getElementById("root")!).render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>,
+);

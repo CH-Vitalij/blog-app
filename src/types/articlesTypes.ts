@@ -5,7 +5,7 @@ interface Author {
   following: boolean;
 }
 
-interface Articles {
+export interface Articles {
   slug: string;
   title: string;
   description: string;
