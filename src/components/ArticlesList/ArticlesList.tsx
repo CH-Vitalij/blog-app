@@ -2,17 +2,18 @@ import { HeartOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Typography, Tag } from "antd";
 import classes from "./ArticlesList.module.scss";
 import { useGetArticlesQuery } from "../../service/articles-api";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useSearchParams, NavLink } from "react-router-dom";
 
 const ArticlesList = () => {
-  const [pageNum, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const articlesQuery = Number(searchParams.get("articles")) || 1;
 
   const {
     data = { articles: [], articlesCount: 0 },
     isFetching,
     isError,
-  } = useGetArticlesQuery({ limit: "5", offset: (pageNum - 1) * 5 });
+  } = useGetArticlesQuery({ limit: "5", offset: (articlesQuery - 1) * 5 });
 
   console.log(isFetching);
 
@@ -29,9 +30,9 @@ const ArticlesList = () => {
         itemLayout="vertical"
         pagination={{
           onChange: (page) => {
-            setPage(page);
+            setSearchParams({ articles: String(page) });
           },
-          current: pageNum,
+          current: articlesQuery,
           pageSize: 5,
           total: data.articlesCount,
           align: "center",
