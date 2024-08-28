@@ -1,8 +1,8 @@
 import { HeartOutlined } from "@ant-design/icons";
-import { Avatar, List, Button, Typography, Tag } from "antd";
+import { Avatar, List, Button, Typography, Tag, Tooltip } from "antd";
 import classes from "./ArticlesList.module.scss";
 import { useGetArticlesQuery } from "../../service/articles-api";
-import { useSearchParams, NavLink } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 
 const ArticlesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,8 +14,6 @@ const ArticlesList = () => {
     isFetching,
     isError,
   } = useGetArticlesQuery({ limit: "5", offset: (articlesQuery - 1) * 5 });
-
-  console.log(isFetching);
 
   if (isFetching) return <h1>Loading...</h1>;
 
@@ -42,7 +40,7 @@ const ArticlesList = () => {
         dataSource={data.articles}
         renderItem={(item) => (
           <List.Item key={item.slug} className={`${classes.articlesItem}`}>
-            <NavLink to={`articles/${item.slug}`} state={{ body: item.body }}>
+            <Link to={`articles/${item.slug}`} state={{ article: item }}>
               <div className={`${classes.articlesItemBody}`}>
                 <div style={{ maxWidth: "682px" }}>
                   <Typography.Title className={`${classes.articlesItemBodyTitle}`} level={5}>
@@ -60,24 +58,34 @@ const ArticlesList = () => {
                   >
                     12
                   </Button>
-                  <div>
-                    <Tag className={`${classes.articlesItemBodyTag}`}>{item.tagList[0]}</Tag>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    {item.tagList.map((el: string, i: number) => (
+                      <Tag key={item.slug + i} className={`${classes.articlesItemBodyTag}`}>
+                        <Tooltip title={el} destroyTooltipOnHide={true}>
+                          {el}
+                        </Tooltip>
+                      </Tag>
+                    ))}
                   </div>
-                  <Typography.Paragraph className={`${classes.articlesItemBodyParagraph}`}>
-                    {item.body}
+                  <Typography.Paragraph className={`${classes.articlesItemBodyDescription}`}>
+                    <Tooltip title={item.description} destroyTooltipOnHide={true}>
+                      {item.description}
+                    </Tooltip>
                   </Typography.Paragraph>
                 </div>
                 <div className={`${classes.articlesItemBodyAuthorData}`}>
                   <div>
                     <div className={`${classes.articlesItemBodyAuthorDataName}`}>
-                      {item.author.username}
+                      <Tooltip title={item.author.username} destroyTooltipOnHide={true}>
+                        {item.author.username}
+                      </Tooltip>
                     </div>
                     <div className={`${classes.articlesItemBodyAuthorDataDate}`}>March 5, 2020</div>
                   </div>
                   <Avatar src={item.author.image} size={46} />
                 </div>
               </div>
-            </NavLink>
+            </Link>
           </List.Item>
         )}
       />

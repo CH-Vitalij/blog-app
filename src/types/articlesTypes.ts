@@ -18,6 +18,10 @@ export interface Articles {
   author: Author;
 }
 
+export interface ArticleState {
+  article?: Articles;
+}
+
 export interface ArticlesRequest {
   articles: Articles[];
   articlesCount: number;

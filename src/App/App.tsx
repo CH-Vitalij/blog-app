@@ -5,7 +5,7 @@ const App: React.FC = () => {
   return (
     <>
       <Header />
-      <main>
+      <main style={{ display: "flex", justifyContent: "center" }}>
         <Outlet />
       </main>
     </>

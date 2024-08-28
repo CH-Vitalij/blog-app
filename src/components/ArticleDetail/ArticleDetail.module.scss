@@ -1,28 +1,26 @@
-.articles {
+.article {
   font-family: "Inter UI", sans-serif;
   font-weight: 400;
   font-size: 12px;
-  width: 938px;
+  padding: 26px 251px 64px;
 
-  &__item {
-    margin-bottom: 26px;
+  &__body {
+    width: 938px;
+    height: auto;
     background-color: #ffffff;
     box-shadow: 0px 4px 12px 0px #00000026;
-    padding: 0 !important;
-    height: 140px;
-  }
-
-  &__item-body {
-    display: flex;
-    justify-content: space-between;
-    gap: 85px;
+    padding: 14px 15px 14px 16px;
     font-weight: 400;
     font-size: 12px;
     line-height: 22px;
-    padding: 15px 14px 24px 16px !important;
   }
 
-  &__item-body-title {
+  &__body-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__body-title {
     display: inline-block;
     max-width: 635px;
     height: 28px;
@@ -38,7 +36,7 @@
     vertical-align: middle;
   }
 
-  &__item-body-btn {
+  &__body-btn {
     width: 34px;
     height: 22px;
     line-height: 22px;
@@ -47,7 +45,12 @@
     color: rgba(0, 0, 0, 0.75);
   }
 
-  &__item-body-tag {
+  &__body-tag-list {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__body-tag {
     line-height: 16px;
     color: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(0, 0, 0, 0.5);
@@ -62,7 +65,7 @@
     overflow: hidden;
   }
 
-  &__item-body-description {
+  &__body-description {
     height: 45px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.75);
@@ -77,14 +80,21 @@
     overflow: hidden;
   }
 
-  &__item-body-author-data {
+  &__body-text {
+    font-family: inherit;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: left;
+  }
+
+  &__body-author-data {
     display: flex;
-    max-width: 141px;
+    gap: 12px;
+    max-width: 261px;
     max-height: 46px;
   }
 
-  &__item-body-author-data-name {
-    max-width: 81px;
+  &__body-author-data-name {
     height: 28px;
     font-size: 18px;
     line-height: 28px;
@@ -95,10 +105,13 @@
     text-align: center;
   }
 
-  &__item-body-author-data-date {
-    max-width: 83px;
+  &__body-author-data-date {
     height: 22px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.5);
+  }
+
+  &_body-author-data-avatar {
+    flex-shrink: 0;
   }
 }
