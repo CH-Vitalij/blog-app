@@ -17,7 +17,7 @@ const ArticleDetailPage: React.FC = () => {
     <div className={`${classes.article}`}>
       <div className={`${classes.articleBody}`}>
         <div className={`${classes.articleBodyHeader}`}>
-          <div style={{ maxWidth: "682px" }}>
+          <div style={{ maxWidth: "635px" }}>
             <Typography.Title className={`${classes.articleBodyTitle}`} level={5}>
               {article?.title}
             </Typography.Title>
@@ -57,11 +57,7 @@ const ArticleDetailPage: React.FC = () => {
               </div>
               <div className={`${classes.articleBodyAuthorDataDate}`}>March 5, 2020</div>
             </div>
-            <Avatar
-              className={`${classes.articleBodyAuthorDataAvatar}`}
-              src={article?.author.image}
-              size={46}
-            />
+            <Avatar src={article?.author.image} size={46} />
           </div>
         </div>
         <Typography.Paragraph className={`${classes.articleBodyText}`}>

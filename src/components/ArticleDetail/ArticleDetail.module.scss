@@ -22,18 +22,14 @@
 
   &__body-title {
     display: inline-block;
-    max-width: 635px;
-    height: 28px;
+    max-width: 588px;
+    height: auto;
     color: #1890ff !important;
     font-family: inherit;
     font-size: 20px !important;
     line-height: 28px !important;
     font-weight: 400 !important;
     margin: 0px 13px 4px 0px !important;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    vertical-align: middle;
   }
 
   &__body-btn {
@@ -47,6 +43,7 @@
 
   &__body-tag-list {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
   }
 
@@ -60,24 +57,16 @@
     text-align: center;
     vertical-align: middle;
     margin: 0px 0px 4px 0px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
   }
 
   &__body-description {
-    height: 45px;
+    height: auto;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.75);
     margin: 0px !important;
     text-align: left;
     font-family: inherit;
     font-size: inherit;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
   }
 
   &__body-text {
@@ -99,9 +88,6 @@
     font-size: 18px;
     line-height: 28px;
     color: rgba(0, 0, 0, 0.85);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
     text-align: center;
   }
 
@@ -109,9 +95,5 @@
     height: 22px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.5);
-  }
-
-  &_body-author-data-avatar {
-    flex-shrink: 0;
   }
 }

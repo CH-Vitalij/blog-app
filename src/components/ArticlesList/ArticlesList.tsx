@@ -42,7 +42,7 @@ const ArticlesList = () => {
           <List.Item key={item.slug} className={`${classes.articlesItem}`}>
             <Link to={`articles/${item.slug}`} state={{ article: item }}>
               <div className={`${classes.articlesItemBody}`}>
-                <div style={{ maxWidth: "682px" }}>
+                <div style={{ maxWidth: "635px" }}>
                   <Typography.Title className={`${classes.articlesItemBodyTitle}`} level={5}>
                     {item.title}
                   </Typography.Title>
