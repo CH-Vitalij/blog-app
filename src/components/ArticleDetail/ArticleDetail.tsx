@@ -6,8 +6,6 @@ import Markdown from "react-markdown";
 
 import classes from "./ArticleDetail.module.scss";
 
-console.log(classes);
-
 const ArticleDetailPage: React.FC = () => {
   const location = useLocation();
   const { article } = (location.state as ArticleState) || {};

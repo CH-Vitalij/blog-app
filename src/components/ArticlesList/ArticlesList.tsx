@@ -1,5 +1,5 @@
 import { HeartOutlined } from "@ant-design/icons";
-import { Avatar, List, Button, Typography, Tag, Tooltip } from "antd";
+import { Avatar, List, Button, Typography, Tag, Tooltip, Spin } from "antd";
 import classes from "./ArticlesList.module.scss";
 import { useGetArticlesQuery } from "../../service/articles-api";
 import { useSearchParams, Link } from "react-router-dom";
@@ -15,7 +15,7 @@ const ArticlesList = () => {
     isError,
   } = useGetArticlesQuery({ limit: "5", offset: (articlesQuery - 1) * 5 });
 
-  if (isFetching) return <h1>Loading...</h1>;
+  if (isFetching) return <Spin tip="Loading" size="large" fullscreen />;
 
   if (isError) return <h1>Error!!!</h1>;
 

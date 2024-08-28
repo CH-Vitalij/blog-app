@@ -1,5 +1,7 @@
+import SignUp from "../../components/SignUp";
+
 const SignUpPage: React.FC = () => {
-  return <h1>SignUp</h1>;
+  return <SignUp />;
 };
 
 export default SignUpPage;
