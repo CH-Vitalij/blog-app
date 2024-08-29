@@ -4,7 +4,8 @@
   background-color: #ffffff;
   padding: 48px 32px;
   margin-top: 59px;
-  height: 599px;
+  width: 384px;
+  height: auto;
 
   &__fieldset {
     border: none;
@@ -31,6 +32,7 @@
   &__input-password {
     padding: 0;
     padding: 8px 12px;
+    margin-top: 2px;
 
     &::placeholder,
     &::placeholder,
@@ -59,6 +61,12 @@
     font-size: 14px;
     line-height: 22px;
     text-align: left;
+    height: 42px;
+  }
+
+  &__actions {
+    text-align: center;
+    margin: 0;
   }
 
   &__btn {
@@ -71,9 +79,5 @@
     padding: 8px 16px 8px 16px;
     border-radius: 4px;
     margin-bottom: 8px;
-  }
-
-  &__actions {
-    text-align: center;
   }
 }
