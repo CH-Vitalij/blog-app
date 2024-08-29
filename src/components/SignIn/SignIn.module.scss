@@ -1,10 +1,10 @@
-.signUp {
-  font-family: "Roboto Regular", sans-serif;
+.signIn {
+  font-family: "Roboto Regular";
   color: #262626;
   background-color: #ffffff;
   padding: 48px 32px;
   margin-top: 59px;
-  height: 599px;
+  height: 374px;
 
   &__fieldset {
     border: none;
@@ -26,7 +26,6 @@
     margin-bottom: 12px;
   }
 
-  &__input-username,
   &__input-email,
   &__input-password {
     padding: 0;
@@ -42,31 +41,13 @@
     }
   }
 
-  &__divider {
-    width: 100%;
-    border: 1px solid #e8e8e8;
-    margin: 0;
-    margin-top: 21px;
-    margin-bottom: 8px;
-  }
-
-  &__item-checkbox {
-    margin-bottom: 21px;
-  }
-
-  &__checkbox {
-    font-family: "Roboto Regular", sans-serif;
-    font-size: 14px;
-    line-height: 22px;
-    text-align: left;
-  }
-
   &__btn {
     font-size: 16px;
     line-height: 24px;
     text-align: center;
     color: #ffffff;
     background-color: #1890ff;
+    width: 319px;
     height: 40px;
     padding: 8px 16px 8px 16px;
     border-radius: 4px;

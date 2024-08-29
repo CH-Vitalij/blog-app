@@ -12,7 +12,7 @@
   "dependencies": {
     "@redux-devtools/extension": "^3.3.0",
     "@reduxjs/toolkit": "^2.2.7",
-    "antd": "^5.20.0",
+    "antd": "^5.20.3",
     "date-fns": "^3.6.0",
     "normalize-scss": "^8.0.0",
     "react": "^18.3.1",
