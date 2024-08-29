@@ -134,6 +134,7 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
+                  aria-invalid={errors.username ? "true" : "false"}
                 />
               )}
             />
@@ -159,6 +160,7 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
+                  aria-invalid={errors.username ? "true" : "false"}
                 />
               )}
             />
@@ -181,6 +183,7 @@ const SignUp: FC = () => {
                   value={value}
                   onChange={onChange}
                   checked={value}
+                  aria-invalid={errors.username ? "true" : "false"}
                 >
                   I agree to the processing of my personal information
                 </Checkbox>
