@@ -22,75 +22,73 @@ const ArticlesList = () => {
   console.log("data", data);
 
   return (
-    <div style={{ padding: "26px 251px 17px 251px" }}>
-      <List
-        className={`${classes.articles}`}
-        itemLayout="vertical"
-        pagination={{
-          onChange: (page) => {
-            setSearchParams({ articles: String(page) });
-          },
-          current: articlesQuery,
-          pageSize: 5,
-          total: data.articlesCount,
-          align: "center",
-          hideOnSinglePage: true,
-          showSizeChanger: false,
-        }}
-        dataSource={data.articles}
-        renderItem={(item) => (
-          <List.Item key={item.slug} className={`${classes.articlesItem}`}>
-            <div className={`${classes.articlesItemBody}`}>
-              <div style={{ maxWidth: "635px" }}>
-                <Link to={`articles/${item.slug}`} state={{ article: item }}>
-                  <Typography.Title className={`${classes.articlesItemBodyTitle}`} level={5}>
-                    {item.title}
-                  </Typography.Title>
-                </Link>
-                <Button
-                  className={`${classes.articlesItemBodyBtn}`}
-                  type="text"
-                  icon={
-                    <HeartOutlined
-                      className={`${classes.articlesItemBodyBtnIcon}`}
-                      style={{ fontSize: "16px" }}
-                    />
-                  }
-                  disabled
-                >
-                  12
-                </Button>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  {item.tagList.map((el: string, i: number) => (
-                    <Tag key={item.slug + i} className={`${classes.articlesItemBodyTag}`}>
-                      <Tooltip title={el} destroyTooltipOnHide={true}>
-                        {el}
-                      </Tooltip>
-                    </Tag>
-                  ))}
-                </div>
-                <Typography.Paragraph className={`${classes.articlesItemBodyDescription}`}>
-                  <Tooltip title={item.description} destroyTooltipOnHide={true}>
-                    {item.description}
-                  </Tooltip>
-                </Typography.Paragraph>
-              </div>
-              <div className={`${classes.articlesItemBodyAuthorData}`}>
-                <div>
-                  <div className={`${classes.articlesItemBodyAuthorDataName}`}>
-                    <Tooltip title={item.author.username} destroyTooltipOnHide={true}>
-                      {item.author.username}
+    <List
+      className={`${classes.articles}`}
+      itemLayout="vertical"
+      pagination={{
+        onChange: (page) => {
+          setSearchParams({ articles: String(page) });
+        },
+        current: articlesQuery,
+        pageSize: 5,
+        total: data.articlesCount,
+        align: "center",
+        hideOnSinglePage: true,
+        showSizeChanger: false,
+      }}
+      dataSource={data.articles}
+      renderItem={(item) => (
+        <List.Item key={item.slug} className={`${classes.articlesItem}`}>
+          <div className={`${classes.articlesItemBody}`}>
+            <div style={{ maxWidth: "635px" }}>
+              <Link to={`articles/${item.slug}`} state={{ article: item }}>
+                <Typography.Title className={`${classes.articlesItemBodyTitle}`} level={5}>
+                  {item.title}
+                </Typography.Title>
+              </Link>
+              <Button
+                className={`${classes.articlesItemBodyBtn}`}
+                type="text"
+                icon={
+                  <HeartOutlined
+                    className={`${classes.articlesItemBodyBtnIcon}`}
+                    style={{ fontSize: "16px" }}
+                  />
+                }
+                disabled
+              >
+                12
+              </Button>
+              <div style={{ display: "flex", gap: "8px" }}>
+                {item.tagList.map((el: string, i: number) => (
+                  <Tag key={item.slug + i} className={`${classes.articlesItemBodyTag}`}>
+                    <Tooltip title={el} destroyTooltipOnHide={true}>
+                      {el}
                     </Tooltip>
-                  </div>
-                  <div className={`${classes.articlesItemBodyAuthorDataDate}`}>March 5, 2020</div>
-                </div>
-                <Avatar src={item.author.image} size={46} />
+                  </Tag>
+                ))}
               </div>
+              <Typography.Paragraph className={`${classes.articlesItemBodyDescription}`}>
+                <Tooltip title={item.description} destroyTooltipOnHide={true}>
+                  {item.description}
+                </Tooltip>
+              </Typography.Paragraph>
             </div>
-          </List.Item>
-        )}
-      />
-    </div>
+            <div className={`${classes.articlesItemBodyAuthorData}`}>
+              <div>
+                <div className={`${classes.articlesItemBodyAuthorDataName}`}>
+                  <Tooltip title={item.author.username} destroyTooltipOnHide={true}>
+                    {item.author.username}
+                  </Tooltip>
+                </div>
+                <div className={`${classes.articlesItemBodyAuthorDataDate}`}>March 5, 2020</div>
+              </div>
+              <Avatar src={item.author.image} size={46} />
+            </div>
+          </div>
+        </List.Item>
+      )}
+    />
   );
 };
 

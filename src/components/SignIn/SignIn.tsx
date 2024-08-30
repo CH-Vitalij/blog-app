@@ -91,7 +91,7 @@ const SignIn: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
-                  aria-invalid={errors.username ? "true" : "false"}
+                  aria-invalid={errors.password ? "true" : "false"}
                 />
               )}
             />
