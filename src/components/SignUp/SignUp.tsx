@@ -1,8 +1,10 @@
 import { Form, Input, Button, Checkbox, Divider, ConfigProvider } from "antd";
 import classes from "./SignUp.module.scss";
-import { FC } from "react";
-import { Link } from "react-router-dom";
+import { FC, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { usePostUserMutation } from "../../service/register-api";
+import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
 
 interface IFormInput {
   username: string;
@@ -12,19 +14,70 @@ interface IFormInput {
   consent: boolean;
 }
 
+interface CustomError {
+  status: number;
+  data: {
+    errors: {
+      username?: string;
+      email?: string;
+    };
+  };
+}
+
 const SignUp: FC = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IFormInput>({
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const [createUser, { data: serverData, isLoading, isSuccess }] = usePostUserMutation();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("Registration success", serverData);
+      navigate("/");
+    }
+  }, [isSuccess, serverData]);
+
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    console.log("data", data);
+    try {
+      await createUser({
+        user: {
+          username: data.username,
+          email: data.email,
+          password: data.password,
+        },
+      }).unwrap();
+    } catch (err) {
+      console.error("Registration error:", err);
+      if (isFetchBaseQueryError(err)) {
+        const customError = err as CustomError;
+        console.log("customError", customError);
+        if (customError?.status === 422) {
+          const { username, email } = customError.data.errors;
+          if (username) setError("username", { type: "server", message: username });
+          if (email) setError("email", { type: "server", message: email });
+        }
+      } else {
+        console.error("An unexpected error occurred", err);
+        throw err;
+      }
+    }
+  };
 
   const onFinish = () => {
     void handleSubmit(onSubmit)();
+  };
+
+  const getErrorMessage = (field: keyof IFormInput) => {
+    return errors[field]?.message;
   };
 
   return (
@@ -40,7 +93,6 @@ const SignUp: FC = () => {
       <Form
         className={`${classes.signUp}`}
         name="register"
-        initialValues={{ layout: "vertical" }}
         layout={"vertical"}
         autoComplete="off"
         onFinish={onFinish}
@@ -51,7 +103,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Username"
             validateStatus={errors.username ? "error" : ""}
-            help={errors.username?.message}
+            help={getErrorMessage("username")}
           >
             <Controller
               name="username"
@@ -74,7 +126,6 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
-                  aria-invalid={errors.username ? "true" : "false"}
                 />
               )}
             />
@@ -83,7 +134,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Email address"
             validateStatus={errors.email ? "error" : ""}
-            help={errors.email?.message}
+            help={getErrorMessage("email")}
           >
             <Controller
               name="email"
@@ -102,7 +153,6 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
-                  aria-invalid={errors.email ? "true" : "false"}
                 />
               )}
             />
@@ -111,7 +161,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Password"
             validateStatus={errors.password ? "error" : ""}
-            help={errors.password?.message}
+            help={getErrorMessage("password")}
           >
             <Controller
               name="password"
@@ -120,11 +170,11 @@ const SignUp: FC = () => {
                 required: "Password is required",
                 minLength: {
                   value: 6,
-                  message: "Password must be at least 6 characters long",
+                  message: "Your password needs to be at least 6 characters.",
                 },
                 maxLength: {
                   value: 40,
-                  message: "Password must not exceed 40 characters",
+                  message: "Your password must not exceed 40 characters",
                 },
               }}
               render={({ field: { name, value, onChange } }) => (
@@ -134,7 +184,6 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
-                  aria-invalid={errors.username ? "true" : "false"}
                 />
               )}
             />
@@ -143,7 +192,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Repeat Password"
             validateStatus={errors.confirmPassword ? "error" : ""}
-            help={errors.confirmPassword?.message}
+            help={getErrorMessage("confirmPassword")}
           >
             <Controller
               name="confirmPassword"
@@ -151,7 +200,7 @@ const SignUp: FC = () => {
               rules={{
                 required: "Please confirm your password",
                 validate: (value, formValues) =>
-                  value === formValues.password || "Passwords do not match",
+                  value === formValues.password || "Passwords must match",
               }}
               render={({ field: { name, value, onChange } }) => (
                 <Input.Password
@@ -160,7 +209,6 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
-                  aria-invalid={errors.username ? "true" : "false"}
                 />
               )}
             />
@@ -170,7 +218,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemCheckbox}`}
             valuePropName="checked"
             validateStatus={errors.consent ? "error" : ""}
-            help={errors.consent?.message}
+            help={getErrorMessage("consent")}
           >
             <Controller
               name="consent"
@@ -183,7 +231,6 @@ const SignUp: FC = () => {
                   value={value}
                   onChange={onChange}
                   checked={value}
-                  aria-invalid={errors.username ? "true" : "false"}
                 >
                   I agree to the processing of my personal information
                 </Checkbox>
@@ -191,7 +238,13 @@ const SignUp: FC = () => {
             />
           </Form.Item>
           <Form.Item className={`${classes.signUpActions}`}>
-            <Button className={`${classes.signUpBtn}`} block type="primary" htmlType="submit">
+            <Button
+              className={`${classes.signUpBtn}`}
+              block
+              type="primary"
+              htmlType="submit"
+              loading={isLoading}
+            >
               Create
             </Button>
             Already have an account? <Link to="/sign-in">Sign In</Link>.
