@@ -16,16 +16,41 @@ import ArticleDetailPage from "./pages/ArticleDetailPage";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import ErrorPage from "./pages/ErrorPage";
+import RequireAuth from "../components/HOC/RequireAuth";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<HomePage />}>
+    <Route path="/" element={<HomePage />} errorElement={<ErrorPage />}>
       <Route index element={<ArticlesPage />} />
       <Route path="articles" element={<Navigate to="/" replace />} />
       <Route path="articles/:slug" element={<ArticleDetailPage />} />
-      <Route path="sign-in" element={<SignInPage />} />
-      <Route path="sign-up" element={<SignUpPage />} />
-      <Route path="sign-up" element={<SignUpPage />} />
+      <Route path="login" element={<SignInPage />} />
+      <Route path="register" element={<SignUpPage />} />
+      <Route
+        path="profile"
+        element={
+          <RequireAuth>
+            <h1>Редактирование профиля</h1>{" "}
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="new-article"
+        element={
+          <RequireAuth>
+            <h1>Создание статьи</h1>{" "}
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="articles/:slug/edit"
+        element={
+          <RequireAuth>
+            <h1>Редактирование статьи</h1>{" "}
+          </RequireAuth>
+        }
+      />
     </Route>,
   ),
   {
