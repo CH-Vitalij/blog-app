@@ -32,9 +32,6 @@
     line-height: 28px !important;
     font-weight: 400 !important;
     margin: 0px 13px 4px 0px !important;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
     vertical-align: middle;
   }
 
@@ -70,11 +67,6 @@
     text-align: left;
     font-family: inherit;
     font-size: inherit;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
   }
 
   &__item-body-author-data {
@@ -89,9 +81,6 @@
     font-size: 18px;
     line-height: 28px;
     color: rgba(0, 0, 0, 0.85);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
     text-align: center;
   }
 

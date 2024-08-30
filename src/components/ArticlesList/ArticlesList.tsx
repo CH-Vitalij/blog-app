@@ -42,7 +42,19 @@ const ArticlesList = () => {
           <div className={`${classes.articlesItemBody}`}>
             <div style={{ maxWidth: "635px" }}>
               <Link to={`articles/${item.slug}`} state={{ article: item }}>
-                <Typography.Title className={`${classes.articlesItemBodyTitle}`} level={5}>
+                <Typography.Title
+                  className={`${classes.articlesItemBodyTitle}`}
+                  level={5}
+                  ellipsis={{
+                    rows: 1,
+                    tooltip: {
+                      title: item.description,
+                      destroyTooltipOnHide: true,
+                      placement: "rightBottom",
+                      color: "rgb(0, 152, 255, 0.85)",
+                    },
+                  }}
+                >
                   {item.title}
                 </Typography.Title>
               </Link>
@@ -68,18 +80,25 @@ const ArticlesList = () => {
                   </Tag>
                 ))}
               </div>
-              <Typography.Paragraph className={`${classes.articlesItemBodyDescription}`}>
-                <Tooltip title={item.description} destroyTooltipOnHide={true}>
-                  {item.description}
-                </Tooltip>
+              <Typography.Paragraph
+                className={`${classes.articlesItemBodyDescription}`}
+                ellipsis={{
+                  rows: 2,
+                  tooltip: {
+                    title: item.description,
+                    destroyTooltipOnHide: true,
+                    placement: "rightBottom",
+                    color: "rgb(0, 152, 255, 0.85)",
+                  },
+                }}
+              >
+                {item.description}
               </Typography.Paragraph>
             </div>
             <div className={`${classes.articlesItemBodyAuthorData}`}>
               <div>
                 <div className={`${classes.articlesItemBodyAuthorDataName}`}>
-                  <Tooltip title={item.author.username} destroyTooltipOnHide={true}>
-                    {item.author.username}
-                  </Tooltip>
+                  {item.author.username}
                 </div>
                 <div className={`${classes.articlesItemBodyAuthorDataDate}`}>March 5, 2020</div>
               </div>

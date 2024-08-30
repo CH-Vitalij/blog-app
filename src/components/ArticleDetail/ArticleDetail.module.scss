@@ -2,7 +2,7 @@
   font-family: "Inter UI", sans-serif;
   font-weight: 400;
   font-size: 12px;
-  padding: 26px 251px 64px;
+  padding: 26px 0px 64px;
 
   &__body {
     width: 938px;
@@ -96,4 +96,11 @@
     line-height: 22px;
     color: rgba(0, 0, 0, 0.5);
   }
+}
+
+.image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
