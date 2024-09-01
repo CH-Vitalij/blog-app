@@ -1,28 +1,11 @@
 import { Form, Input, Button, Checkbox, Divider, ConfigProvider } from "antd";
 import classes from "./SignUp.module.scss";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { usePostUserMutation } from "../../service/register-api";
+import { usePostUserMutation } from "../../service/api";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
-
-interface IFormInput {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  consent: boolean;
-}
-
-interface CustomError {
-  status: number;
-  data: {
-    errors: {
-      username?: string;
-      email?: string;
-    };
-  };
-}
+import { IFormInput, ICustomError } from "../../types/SignUpTypes";
 
 const SignUp: FC = () => {
   const {
@@ -31,34 +14,31 @@ const SignUp: FC = () => {
     formState: { errors },
     setError,
   } = useForm<IFormInput>({
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
-  const [createUser, { data: serverData, isLoading, isSuccess }] = usePostUserMutation();
+  const [createUser, { isLoading }] = usePostUserMutation();
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isSuccess) {
-      console.log("Registration success", serverData);
-      navigate("/");
-    }
-  }, [isSuccess, serverData]);
-
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log("data", data);
     try {
-      await createUser({
+      const result = await createUser({
         user: {
           username: data.username,
           email: data.email,
           password: data.password,
         },
       }).unwrap();
+
+      if (result) {
+        console.log("Registration success", result);
+        navigate("/");
+      }
     } catch (err) {
       console.error("Registration error:", err);
       if (isFetchBaseQueryError(err)) {
-        const customError = err as CustomError;
+        const customError = err as ICustomError;
         console.log("customError", customError);
         if (customError?.status === 422) {
           const { username, email } = customError.data.errors;

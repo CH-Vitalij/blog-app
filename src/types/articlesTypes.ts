@@ -22,7 +22,7 @@ export interface ArticleState {
   article?: Articles;
 }
 
-export interface ArticlesRequest {
+export interface ArticlesResponse {
   articles: Articles[];
   articlesCount: number;
 }

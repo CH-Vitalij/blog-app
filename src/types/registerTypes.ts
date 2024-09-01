@@ -6,7 +6,7 @@ export interface RegisterUserRequest {
   };
 }
 
-export interface RegisterUserResponse {
+export interface UserResponse {
   user: {
     username: string;
     email: string;

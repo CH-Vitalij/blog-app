@@ -1,7 +1,7 @@
 import { HeartOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Typography, Tag, Tooltip, Spin } from "antd";
 import classes from "./ArticlesList.module.scss";
-import { useGetArticlesQuery } from "../../service/articles-api";
+import { useGetArticlesQuery } from "../../service/api";
 import { useSearchParams, Link } from "react-router-dom";
 
 const ArticlesList = () => {
@@ -9,15 +9,14 @@ const ArticlesList = () => {
 
   const articlesQuery = Number(searchParams.get("articles")) || 1;
 
-  const {
-    data = { articles: [], articlesCount: 0 },
-    isFetching,
-    isError,
-  } = useGetArticlesQuery({ limit: "5", offset: (articlesQuery - 1) * 5 });
+  const { data, isLoading, isSuccess, isFetching, isError } = useGetArticlesQuery({
+    limit: "5",
+    offset: (articlesQuery - 1) * 5,
+  });
 
-  if (isFetching) return <Spin tip="Loading" size="large" fullscreen />;
-
+  if (isLoading) return <Spin size="large" fullscreen />;
   if (isError) return <h1>Error!!!</h1>;
+  if (!isSuccess) return null;
 
   console.log("data", data);
 
@@ -25,6 +24,7 @@ const ArticlesList = () => {
     <List
       className={`${classes.articles}`}
       itemLayout="vertical"
+      loading={{ spinning: isFetching, size: "large" }}
       pagination={{
         onChange: (page) => {
           setSearchParams({ articles: String(page) });
