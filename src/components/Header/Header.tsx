@@ -1,9 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Location, useLocation, useNavigate } from "react-router-dom";
 import classes from "./Header.module.scss";
 import { Button } from "antd";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
+interface LocationStateHeader {
+  userData: {
+    username: string;
+    email: string;
+    token: string;
+  };
+}
+
 const Header: React.FC = () => {
+  const location = useLocation() as Location<LocationStateHeader>;
+  console.log("userData", location.state?.userData);
   const { auth, signOut } = useAuthContext();
   const navigate = useNavigate();
 
@@ -40,6 +50,7 @@ const Header: React.FC = () => {
             </Link>
           ) : null}
           {auth ? <Button onClick={handleCreateArticle}>Create article</Button> : null}
+          {auth ? <span>{location.state?.userData?.username}</span> : null}
           {auth ? <Button onClick={handleLogOut}>Log Out</Button> : null}
         </div>
       </nav>

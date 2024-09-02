@@ -1,15 +1,18 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { ArticleState } from "../../types/articlesTypes";
 import { Avatar, Button, Typography, Tag } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
+
 import Markdown from "react-markdown";
 
 import classes from "./ArticleDetail.module.scss";
 
 const ArticleDetailPage: React.FC = () => {
+  const { slug } = useParams();
+
   const location = useLocation();
+
   const { article } = (location.state as ArticleState) || {};
-  console.log(article);
 
   return (
     <div className={`${classes.article}`}>
