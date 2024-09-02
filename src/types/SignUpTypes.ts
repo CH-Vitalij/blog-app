@@ -1,4 +1,4 @@
-export interface IFormInput {
+export interface IRegisterFormInput {
   username: string;
   email: string;
   password: string;
@@ -6,7 +6,7 @@ export interface IFormInput {
   consent: boolean;
 }
 
-export interface ICustomError {
+export interface IRegisterServerError {
   status: number;
   data: {
     errors: {

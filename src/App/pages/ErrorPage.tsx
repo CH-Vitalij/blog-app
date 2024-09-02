@@ -5,10 +5,7 @@ export default function ErrorPage() {
 
   if (isRouteErrorResponse(error)) {
     return (
-      <div
-        id="error-page"
-        style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-      >
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <h1>Oops!</h1>
         <p>Sorry, an unexpected error has occurred.</p>
         <p>
@@ -16,5 +13,10 @@ export default function ErrorPage() {
         </p>
       </div>
     );
-  } else return <div>Something went wrong</div>;
+  } else
+    return (
+      <h1 style={{ display: "flex", justifyContent: "center" }}>
+        Something went wrong
+      </h1>
+    );
 }

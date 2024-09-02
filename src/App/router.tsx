@@ -18,6 +18,7 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import ErrorPage from "./pages/ErrorPage";
 import RequireAuth from "../components/RequireAuth";
+import { AuthProvider } from "../HOC/AuthProvider";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -60,6 +61,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </Provider>,
 );

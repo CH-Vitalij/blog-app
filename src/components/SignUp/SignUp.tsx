@@ -1,11 +1,11 @@
 import { Form, Input, Button, Checkbox, Divider, ConfigProvider } from "antd";
 import classes from "./SignUp.module.scss";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { usePostUserMutation } from "../../service/api";
+import { useRegisterUserMutation } from "../../service/api";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
-import { IFormInput, ICustomError } from "../../types/SignUpTypes";
+import { IRegisterFormInput, IRegisterServerError } from "../../types/SignUpTypes";
 
 const SignUp: FC = () => {
   const {
@@ -13,15 +13,20 @@ const SignUp: FC = () => {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<IFormInput>({
+    setFocus,
+  } = useForm<IRegisterFormInput>({
     mode: "onSubmit",
   });
 
-  const [createUser, { isLoading }] = usePostUserMutation();
+  const [createUser, { isLoading, error }] = useRegisterUserMutation();
 
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+  useEffect(() => {
+    setFocus("username");
+  }, [setFocus]);
+
+  const onSubmit: SubmitHandler<IRegisterFormInput> = async (data) => {
     try {
       const result = await createUser({
         user: {
@@ -33,21 +38,20 @@ const SignUp: FC = () => {
 
       if (result) {
         console.log("Registration success", result);
-        navigate("/");
+        navigate("/login");
       }
     } catch (err) {
       console.error("Registration error:", err);
       if (isFetchBaseQueryError(err)) {
-        const customError = err as ICustomError;
-        console.log("customError", customError);
-        if (customError?.status === 422) {
-          const { username, email } = customError.data.errors;
+        const serverError = err as IRegisterServerError;
+        console.log("customError", serverError);
+        if (serverError?.status === 422) {
+          const { username, email } = serverError.data.errors;
           if (username) setError("username", { type: "server", message: username });
           if (email) setError("email", { type: "server", message: email });
         }
       } else {
         console.error("An unexpected error occurred", err);
-        throw err;
       }
     }
   };
@@ -56,9 +60,9 @@ const SignUp: FC = () => {
     void handleSubmit(onSubmit)();
   };
 
-  const getErrorMessage = (field: keyof IFormInput) => {
-    return errors[field]?.message;
-  };
+  if (isFetchBaseQueryError(error)) {
+    if (error?.status !== 422) return <h1>Something went wrong</h1>;
+  }
 
   return (
     <ConfigProvider
@@ -83,7 +87,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Username"
             validateStatus={errors.username ? "error" : ""}
-            help={getErrorMessage("username")}
+            help={errors.username?.message}
           >
             <Controller
               name="username"
@@ -99,13 +103,15 @@ const SignUp: FC = () => {
                   message: "Username must not exceed 20 characters",
                 },
               }}
-              render={({ field: { name, value, onChange } }) => (
+              render={({ field: { name, value, onChange, ref } }) => (
                 <Input
                   className={`${classes.signUpInputUsername}`}
                   placeholder="Username"
                   name={name}
                   value={value}
+                  ref={ref}
                   onChange={onChange}
+                  aria-invalid={errors.username ? "true" : "false"}
                 />
               )}
             />
@@ -114,7 +120,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Email address"
             validateStatus={errors.email ? "error" : ""}
-            help={getErrorMessage("email")}
+            help={errors.email?.message}
           >
             <Controller
               name="email"
@@ -133,6 +139,7 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
+                  aria-invalid={errors.email ? "true" : "false"}
                 />
               )}
             />
@@ -141,7 +148,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Password"
             validateStatus={errors.password ? "error" : ""}
-            help={getErrorMessage("password")}
+            help={errors.password?.message}
           >
             <Controller
               name="password"
@@ -164,6 +171,7 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
+                  aria-invalid={errors.password ? "true" : "false"}
                 />
               )}
             />
@@ -172,7 +180,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemInput}`}
             label="Repeat Password"
             validateStatus={errors.confirmPassword ? "error" : ""}
-            help={getErrorMessage("confirmPassword")}
+            help={errors.confirmPassword?.message}
           >
             <Controller
               name="confirmPassword"
@@ -189,6 +197,7 @@ const SignUp: FC = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
+                  aria-invalid={errors.confirmPassword ? "true" : "false"}
                 />
               )}
             />
@@ -198,7 +207,7 @@ const SignUp: FC = () => {
             className={`${classes.signUpItemCheckbox}`}
             valuePropName="checked"
             validateStatus={errors.consent ? "error" : ""}
-            help={getErrorMessage("consent")}
+            help={errors.consent?.message}
           >
             <Controller
               name="consent"
@@ -227,7 +236,7 @@ const SignUp: FC = () => {
             >
               Create
             </Button>
-            Already have an account? <Link to="/sign-in">Sign In</Link>.
+            Already have an account? <Link to="/login">Sign In</Link>.
           </Form.Item>
         </fieldset>
       </Form>

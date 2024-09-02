@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ArticlesResponse } from "../types/articlesTypes";
-import { RegisterUserRequest, UserResponse } from "../types/registerTypes";
+import { IRegisterUserRequest, IRegisterUserResponse } from "../types/registerTypes";
+import { ILoginUserRequest, ILoginUserResponse } from "../types/loginTypes";
 
 export const api = createApi({
   reducerPath: "Api",
@@ -11,18 +12,13 @@ export const api = createApi({
         url: `articles?${limit && `limit=${limit}&${offset && `offset=${offset}`}`}`,
       }),
     }),
-    getUser: builder.query<UserResponse, string>({
-      query: (token) => ({
-        url: "user",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-    }),
-    postUser: builder.mutation<UserResponse, RegisterUserRequest>({
+    registerUser: builder.mutation<IRegisterUserResponse, IRegisterUserRequest>({
       query: (body) => ({ url: "users", method: "POST", body }),
+    }),
+    loginUser: builder.mutation<ILoginUserResponse, ILoginUserRequest>({
+      query: (body) => ({ url: "users/login", method: "POST", body }),
     }),
   }),
 });
 
-export const { useGetArticlesQuery, usePostUserMutation, useGetUserQuery } = api;
+export const { useGetArticlesQuery, useRegisterUserMutation, useLoginUserMutation } = api;
