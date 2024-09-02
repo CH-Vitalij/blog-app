@@ -2,9 +2,18 @@ import { HeartOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Typography, Tag, Tooltip, Spin } from "antd";
 import classes from "./ArticlesList.module.scss";
 import { useGetArticlesQuery } from "../../service/api";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useLocation, Location } from "react-router-dom";
+
+interface LocationStateHeader {
+  userData: {
+    username: string;
+    email: string;
+    token: string;
+  };
+}
 
 const ArticlesList = () => {
+  const location = useLocation() as Location<LocationStateHeader>;
   const [searchParams, setSearchParams] = useSearchParams();
 
   const articlesQuery = Number(searchParams.get("articles")) || 1;
@@ -41,7 +50,7 @@ const ArticlesList = () => {
         <List.Item key={item.slug} className={`${classes.articlesItem}`}>
           <div className={`${classes.articlesItemBody}`}>
             <div style={{ maxWidth: "635px" }}>
-              <Link to={`articles/${item.slug}`} state={{ article: item }}>
+              <Link to={`articles/${item.slug}`} state={{ article: item, userData: location.state?.userData }}>
                 <Typography.Title
                   className={`${classes.articlesItemBodyTitle}`}
                   level={5}

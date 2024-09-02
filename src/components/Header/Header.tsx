@@ -26,13 +26,17 @@ const Header: React.FC = () => {
   };
 
   const handleCreateArticle = () => {
-    navigate("profile");
+    navigate("profile", { state: { userData: location.state?.userData } });
   };
 
   return (
     <header className={`${classes.header}`}>
       <nav className={`${classes.headerNav}`}>
-        <Link to="/" className={`${classes.headerNavItem}`}>
+        <Link
+          to="/"
+          className={`${classes.headerNavItem}`}
+          state={{ userData: location.state?.userData }}
+        >
           Realworld Blog
         </Link>
         <div>
