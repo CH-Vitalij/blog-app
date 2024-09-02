@@ -124,7 +124,12 @@ const SignIn: FC = () => {
               )}
             />
           </Form.Item>
-          <Form.Item className={`${classes.signInItemInput}`} label="Password">
+          <Form.Item
+            className={`${classes.signInItemInput}`}
+            label="Password"
+            validateStatus={errors.password ? "error" : ""}
+            help={errors.password?.message}
+          >
             <Controller
               name="password"
               control={control}
