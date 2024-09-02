@@ -9,8 +9,7 @@ const Header: React.FC = () => {
 
   const handleLogOut = () => {
     try {
-      signOut();
-      navigate("/");
+      signOut(() => navigate("/"));
     } catch (err) {
       console.error("Error during logout:", err);
     }

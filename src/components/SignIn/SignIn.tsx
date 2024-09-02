@@ -1,12 +1,16 @@
 import { Form, Input, Button, ConfigProvider } from "antd";
 import classes from "./SignIn.module.scss";
 import { FC, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Location, Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useLoginUserMutation } from "../../service/api";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
 import { ILoginFormInput, ILoginServerError } from "../../types/SignInTypes";
 import { useAuthContext } from "../../hooks/useAuthContext";
+
+interface LocationState {
+  from?: string;
+}
 
 const SignIn: FC = () => {
   const {
@@ -21,6 +25,8 @@ const SignIn: FC = () => {
 
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
 
+  const location = useLocation() as Location<LocationState>;
+  const fromPage = location.state?.from || "/";
   const navigate = useNavigate();
 
   const { signIn } = useAuthContext();
@@ -41,8 +47,7 @@ const SignIn: FC = () => {
 
       if (result) {
         console.log("Login success", result);
-        signIn(result.user.token);
-        navigate("/");
+        signIn(result.user.token, () => navigate(fromPage, { replace: true }));
       }
     } catch (err) {
       console.error("Login error:", err);

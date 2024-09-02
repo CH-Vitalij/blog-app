@@ -1,15 +1,7 @@
-import { createContext, FC, ReactNode, useState } from "react";
+import { createContext, FC, useState } from "react";
 import { useHaveToken } from "../hooks/useHaveToken";
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export interface AuthContextValue {
-  auth: boolean;
-  signIn: (token: string) => void;
-  signOut: () => void;
-}
+import { AuthContextValue } from "../types/AuthContextTypes";
+import { AuthProviderProps } from "../types/AuthProviderTypes";
 
 const initialValue: AuthContextValue = {
   auth: false,
@@ -25,14 +17,16 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const setToken = (token: string) => localStorage.setItem("token", token);
   const removeToken = () => localStorage.removeItem("token");
 
-  const signIn = (token: string) => {
+  const signIn = (token: string, cb: () => void) => {
     setToken(token);
     setAuth(true);
+    cb();
   };
 
-  const signOut = () => {
+  const signOut = (cb: () => void) => {
     removeToken();
     setAuth(false);
+    cb();
   };
 
   const value = { auth, signIn, signOut };
