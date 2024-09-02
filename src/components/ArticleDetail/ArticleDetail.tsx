@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-// import { ArticleState } from "../../types/articlesTypes";
+import { useLocation, useParams } from "react-router-dom";
+import { ArticleState } from "../../types/articlesTypes";
 import { Avatar, Button, Typography, Tag } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
 
@@ -11,21 +11,26 @@ import { useGetArticlesQuery } from "../../service/api";
 const ArticleDetailPage: React.FC = () => {
   const { slug } = useParams();
 
-  // const location = useLocation();
+  const location = useLocation();
 
-  // const { article } = (location.state as ArticleState) || {};
+  const state = location.state as ArticleState | undefined;
+  const initialArticle = state ? state.article : undefined;
+  console.log("initialArticle", initialArticle);
 
-  const { data: article } = useGetArticlesQuery(
+  const { data: fetchedArticle } = useGetArticlesQuery(
     {
-      limit: "5",
+      limit: "",
       offset: 0,
     },
     {
       selectFromResult: ({ data }) => ({
         data: data?.articles.find((item) => item.slug === slug),
       }),
+      skip: initialArticle !== undefined,
     },
   );
+
+  const article = initialArticle || fetchedArticle;
 
   console.log("article", article);
 
