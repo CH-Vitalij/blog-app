@@ -2,6 +2,7 @@ import { createContext, FC, useState } from "react";
 import { useHaveToken } from "../hooks/useHaveToken";
 import { AuthContextValue } from "../types/AuthContextTypes";
 import { AuthProviderProps } from "../types/AuthProviderTypes";
+import { removeToken, setToken } from "../features/token";
 
 const initialValue: AuthContextValue = {
   auth: false,
@@ -13,9 +14,6 @@ export const AuthContext = createContext<AuthContextValue>(initialValue);
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState(useHaveToken());
-
-  const setToken = (token: string) => localStorage.setItem("token", token);
-  const removeToken = () => localStorage.removeItem("token");
 
   const signIn = (token: string, cb: () => void) => {
     setToken(token);

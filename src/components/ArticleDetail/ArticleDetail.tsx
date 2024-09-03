@@ -17,7 +17,11 @@ const ArticleDetailPage: React.FC = () => {
   const initialArticle = state ? state.article : undefined;
   console.log("initialArticle", initialArticle);
 
-  const { data: fetchedArticle, isLoading } = useGetArticleQuery(
+  const {
+    data: fetchedArticle,
+    isLoading,
+    isError,
+  } = useGetArticleQuery(
     {
       slug: slug || "",
     },
@@ -33,7 +37,7 @@ const ArticleDetailPage: React.FC = () => {
   console.log("article", article);
 
   if (isLoading) return <h1>Loading...</h1>;
-  if (!article) return <h1>Article not found</h1>;
+  if (isError) return <h1>Sorry, something went wrong</h1>;
 
   return (
     <div className={`${classes.article}`}>

@@ -116,6 +116,8 @@ const SignIn: FC = () => {
               render={({ field: { name, value, onChange, ref } }) => (
                 <Input
                   className={`${classes.signInInputEmail}`}
+                  type="email"
+                  autoComplete="email"
                   name={name}
                   value={value}
                   onChange={onChange}
@@ -141,6 +143,7 @@ const SignIn: FC = () => {
               render={({ field: { name, value, onChange } }) => (
                 <Input.Password
                   className={`${classes.signInInputPassword}`}
+                  visibilityToggle={false}
                   placeholder="Password"
                   name={name}
                   value={value}
@@ -165,7 +168,7 @@ const SignIn: FC = () => {
             >
               Login
             </Button>
-            <span>
+            <span role="alert">
               Don`t have an account? <Link to="/register">Sign Up</Link>.
             </span>
           </Form.Item>

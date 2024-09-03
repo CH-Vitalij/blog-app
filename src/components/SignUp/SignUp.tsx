@@ -135,6 +135,8 @@ const SignUp: FC = () => {
               render={({ field: { name, value, onChange } }) => (
                 <Input
                   className={`${classes.signUpInputEmail}`}
+                  type="email"
+                  autoComplete="email"
                   placeholder="Email address"
                   name={name}
                   value={value}
@@ -167,6 +169,7 @@ const SignUp: FC = () => {
               render={({ field: { name, value, onChange } }) => (
                 <Input.Password
                   className={`${classes.signUpInputPassword}`}
+                  visibilityToggle={false}
                   placeholder="Password"
                   name={name}
                   value={value}
@@ -193,6 +196,7 @@ const SignUp: FC = () => {
               render={({ field: { name, value, onChange } }) => (
                 <Input.Password
                   className={`${classes.signUpInputPassword}`}
+                  visibilityToggle={false}
                   placeholder="Confirm password"
                   name={name}
                   value={value}

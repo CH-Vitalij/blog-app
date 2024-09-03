@@ -54,7 +54,11 @@ const Header: React.FC = () => {
             </Link>
           ) : null}
           {auth ? <Button onClick={handleCreateArticle}>Create article</Button> : null}
-          {auth ? <span>{location.state?.userData?.username}</span> : null}
+          {auth ? (
+            <Link to="profile" state={{ userData: location.state?.userData }}>
+              {location.state?.userData?.username}
+            </Link>
+          ) : null}
           {auth ? <Button onClick={handleLogOut}>Log Out</Button> : null}
         </div>
       </nav>

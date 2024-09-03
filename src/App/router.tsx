@@ -19,6 +19,7 @@ import SignUpPage from "./pages/SignUpPage";
 import ErrorPage from "./pages/ErrorPage";
 import RequireAuth from "../components/RequireAuth";
 import { AuthProvider } from "../HOC/AuthProvider";
+import EditProfilePage from "./pages/EditProfilePage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,7 +33,7 @@ const router = createBrowserRouter(
         path="profile"
         element={
           <RequireAuth>
-            <h1>Редактирование профиля</h1>{" "}
+            <EditProfilePage />
           </RequireAuth>
         }
       />
