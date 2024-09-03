@@ -6,7 +6,7 @@ import { HeartOutlined } from "@ant-design/icons";
 import Markdown from "react-markdown";
 
 import classes from "./ArticleDetail.module.scss";
-import { useGetArticlesQuery } from "../../service/api";
+import { useGetArticleQuery } from "../../service/api";
 
 const ArticleDetailPage: React.FC = () => {
   const { slug } = useParams();
@@ -17,24 +17,23 @@ const ArticleDetailPage: React.FC = () => {
   const initialArticle = state ? state.article : undefined;
   console.log("initialArticle", initialArticle);
 
-  const { data: fetchedArticle } = useGetArticlesQuery(
+  const { data: fetchedArticle, isLoading } = useGetArticleQuery(
     {
-      limit: "",
-      offset: 0,
+      slug: slug || "",
     },
     {
-      selectFromResult: ({ data }) => ({
-        data: data?.articles.find((item) => item.slug === slug),
-      }),
-      skip: initialArticle !== undefined,
+      skip: initialArticle !== undefined || !slug,
     },
   );
 
-  const article = initialArticle || fetchedArticle;
+  console.log("fetchedArticle", fetchedArticle);
+
+  const article = initialArticle || fetchedArticle?.article;
 
   console.log("article", article);
 
-  if (!article) return <h1>Loading...</h1>;
+  if (isLoading) return <h1>Loading...</h1>;
+  if (!article) return <h1>Article not found</h1>;
 
   return (
     <div className={`${classes.article}`}>

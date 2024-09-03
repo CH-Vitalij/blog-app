@@ -13,7 +13,7 @@ export interface Articles {
   tagList: string[];
   createdAt: string;
   updatedAt: string;
-  favorite: boolean;
+  favorited: boolean;
   favoritesCount: number;
   author: Author;
 }
@@ -25,4 +25,8 @@ export interface ArticleState {
 export interface ArticlesResponse {
   articles: Articles[];
   articlesCount: number;
+}
+
+export interface ArticleResponse {
+  article: Articles;
 }

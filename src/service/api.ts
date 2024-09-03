@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ArticlesResponse } from "../types/articlesTypes";
+import { ArticlesResponse, ArticleResponse } from "../types/articlesTypes";
 import { IRegisterUserRequest, IRegisterUserResponse } from "../types/registerTypes";
 import { ILoginUserRequest, ILoginUserResponse } from "../types/loginTypes";
 
@@ -8,8 +8,13 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "https://blog.kata.academy/api/" }),
   endpoints: (builder) => ({
     getArticles: builder.query<ArticlesResponse, { limit: string; offset: number }>({
-      query: ({ limit = "", offset = 0 }) => ({
+      query: ({ limit = "5", offset = 0 }) => ({
         url: `articles?${limit && `limit=${limit}&${offset && `offset=${offset}`}`}`,
+      }),
+    }),
+    getArticle: builder.query<ArticleResponse, { slug: string }>({
+      query: ({ slug }) => ({
+        url: `articles/${slug}`,
       }),
     }),
     registerUser: builder.mutation<IRegisterUserResponse, IRegisterUserRequest>({
@@ -21,4 +26,9 @@ export const api = createApi({
   }),
 });
 
-export const { useGetArticlesQuery, useRegisterUserMutation, useLoginUserMutation } = api;
+export const {
+  useGetArticlesQuery,
+  useGetArticleQuery,
+  useRegisterUserMutation,
+  useLoginUserMutation,
+} = api;
