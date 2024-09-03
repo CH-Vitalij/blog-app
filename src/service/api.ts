@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ArticlesResponse, ArticleResponse } from "../types/articlesTypes";
 import { IRegisterUserRequest, IRegisterUserResponse } from "../types/registerTypes";
 import { ILoginUserRequest, ILoginUserResponse } from "../types/loginTypes";
+import { IEditProfileResponse, IEditProfileRequest } from "../types/editProfileTypes";
 
 export const api = createApi({
   reducerPath: "Api",
@@ -23,6 +24,16 @@ export const api = createApi({
     loginUser: builder.mutation<ILoginUserResponse, ILoginUserRequest>({
       query: (body) => ({ url: "users/login", method: "POST", body }),
     }),
+    editUser: builder.mutation<IEditProfileResponse, { body: IEditProfileRequest; token: string }>({
+      query: ({body, token}) => ({
+        url: "user",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "PUT",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -31,4 +42,5 @@ export const {
   useGetArticleQuery,
   useRegisterUserMutation,
   useLoginUserMutation,
+  useEditUserMutation,
 } = api;

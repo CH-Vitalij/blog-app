@@ -5,7 +5,7 @@ import { Location, Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useLoginUserMutation } from "../../service/api";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
-import { ILoginFormInput, ILoginServerError } from "../../types/SignInTypes";
+import { ILoginFormInput, ILoginServerError } from "../../types/loginTypes";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 interface LocationState {
@@ -55,13 +55,14 @@ const SignIn: FC = () => {
       console.error("Login error:", err);
       if (isFetchBaseQueryError(err)) {
         const serverError = err as ILoginServerError;
-        console.log("customError", serverError);
+        console.log("serverError", serverError);
+
         if (serverError?.status === 422) {
-          setError("root.serverError", {
-            type: "server",
-            message: `${Object.keys(serverError.data.errors)[0]} ${
-              serverError.data.errors[Object.keys(serverError.data.errors)[0]]
-            }`,
+          Object.keys(serverError.data.errors).forEach((key) => {
+            setError("root.serverError", {
+              type: "server",
+              message: `${key} ${serverError.data.errors[key]}`,
+            });
           });
         }
       } else {
@@ -75,7 +76,7 @@ const SignIn: FC = () => {
   };
 
   if (isFetchBaseQueryError(error)) {
-    if (error?.status !== 422) return <h1>Something went wrong</h1>;
+    if (error?.status !== 422) return <h1>Sorry, Something went wrong</h1>;
   }
 
   return (
@@ -163,14 +164,12 @@ const SignIn: FC = () => {
               block
               type="primary"
               htmlType="submit"
-              name="button"
+              name="login"
               loading={isLoading}
             >
               Login
             </Button>
-            <span role="alert">
-              Don`t have an account? <Link to="/register">Sign Up</Link>.
-            </span>
+            Don`t have an account? <Link to="/register">Sign Up</Link>.
           </Form.Item>
         </fieldset>
       </Form>

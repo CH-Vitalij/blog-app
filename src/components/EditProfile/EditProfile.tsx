@@ -1,13 +1,10 @@
 import { Button, ConfigProvider, Form, Input } from "antd";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import classes from "./EditProfile.module.scss";
-
-export interface IEditProfileFormInput {
-  username: string;
-  email: string;
-  newPassword: string;
-  avatar: string;
-}
+import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
+import { IEditProfileFormInput, IEditProfileServerError } from "../../types/editProfileTypes";
+import { useEditUserMutation } from "../../service/api";
+import { getToken } from "../../features/token";
 
 const EditProfile = () => {
   const {
@@ -15,16 +12,58 @@ const EditProfile = () => {
     handleSubmit,
     formState: { errors },
     setError,
-    setFocus,
   } = useForm<IEditProfileFormInput>({
     mode: "onSubmit",
   });
 
-  const onSubmit = () => console.log("onSubmit");
+  const [editProfile, { isLoading, error }] = useEditUserMutation();
+
+  const onSubmit: SubmitHandler<IEditProfileFormInput> = async (data) => {
+    console.log(data);
+    try {
+      const token = getToken() as string;
+      const result = await editProfile({
+        body: {
+          user: {
+            email: data.email,
+            username: data.username,
+            image: data.image,
+            password: data.newPassword,
+          },
+        },
+        token,
+      }).unwrap();
+
+      if (result) {
+        console.log("Edit success", result);
+      }
+    } catch (err) {
+      console.error("Edit error:", err);
+      if (isFetchBaseQueryError(err)) {
+        const serverError = err as IEditProfileServerError;
+        console.log("serverError", serverError);
+
+        if (serverError?.status === 422) {
+          Object.keys(serverError.data.errors).forEach((key) => {
+            setError(key as keyof IEditProfileFormInput, {
+              type: "server",
+              message: `${key} ${serverError.data.errors[key]}`,
+            });
+          });
+        }
+      } else {
+        console.error("An unexpected error occurred", err);
+      }
+    }
+  };
 
   const onFinish = () => {
     void handleSubmit(onSubmit)();
   };
+
+  if (isFetchBaseQueryError(error)) {
+    if (error?.status !== 422) return <h1>Sorry, Something went wrong</h1>;
+  }
 
   return (
     <ConfigProvider
@@ -38,7 +77,7 @@ const EditProfile = () => {
     >
       <Form
         className={`${classes.editProfile}`}
-        name="login"
+        name="editProfile"
         layout={"vertical"}
         autoComplete="off"
         onFinish={onFinish}
@@ -56,9 +95,13 @@ const EditProfile = () => {
               control={control}
               rules={{
                 required: "Username is required",
-                pattern: {
-                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
-                  message: "Please enter a valid email address",
+                minLength: {
+                  value: 3,
+                  message: "Username must be at least 3 characters long",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Username must not exceed 20 characters",
                 },
               }}
               render={({ field: { name, value, onChange, ref } }) => (
@@ -69,7 +112,7 @@ const EditProfile = () => {
                   onChange={onChange}
                   ref={ref}
                   placeholder="Username"
-                  aria-invalid={errors.email || errors.root?.serverError ? "true" : "false"}
+                  aria-invalid={errors.email ? "true" : "false"}
                 />
               )}
             />
@@ -100,7 +143,7 @@ const EditProfile = () => {
                   onChange={onChange}
                   ref={ref}
                   placeholder="Email address"
-                  aria-invalid={errors.email || errors.root?.serverError ? "true" : "false"}
+                  aria-invalid={errors.email ? "true" : "false"}
                 />
               )}
             />
@@ -116,6 +159,14 @@ const EditProfile = () => {
               control={control}
               rules={{
                 required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Your password needs to be at least 6 characters.",
+                },
+                maxLength: {
+                  value: 40,
+                  message: "Your password must not exceed 40 characters",
+                },
               }}
               render={({ field: { name, value, onChange } }) => (
                 <Input.Password
@@ -125,47 +176,44 @@ const EditProfile = () => {
                   name={name}
                   value={value}
                   onChange={onChange}
-                  aria-invalid={errors.newPassword || errors.root?.serverError ? "true" : "false"}
+                  aria-invalid={errors.newPassword ? "true" : "false"}
                 />
               )}
             />
           </Form.Item>
           <Form.Item
             className={`${classes.editProfileItemInput}`}
-            label="Avatar image (url)"
-            validateStatus={errors.avatar ? "error" : ""}
-            help={errors.avatar?.message}
+            label="Image image (url)"
+            validateStatus={errors.image ? "error" : ""}
+            help={errors.image?.message}
           >
             <Controller
-              name="avatar"
+              name="image"
               control={control}
               rules={{
-                required: "Avatar image is required",
+                required: "Image image is required",
               }}
               render={({ field: { name, value, onChange } }) => (
                 <Input
                   className={`${classes.editProfileInputAvatar}`}
                   type="url"
-                  placeholder="Avatar image"
+                  placeholder="Image image"
                   name={name}
                   value={value}
                   onChange={onChange}
-                  aria-invalid={errors.avatar || errors.root?.serverError ? "true" : "false"}
+                  aria-invalid={errors.image ? "true" : "false"}
                 />
               )}
             />
           </Form.Item>
-          <Form.Item
-            className={`${classes.editProfileActions}`}
-            validateStatus={errors.root?.serverError?.message ? "error" : ""}
-            help={errors.root?.serverError?.message}
-          >
+          <Form.Item className={`${classes.editProfileActions}`}>
             <Button
               className={`${classes.editProfileBtn}`}
               block
               type="primary"
               htmlType="submit"
-              name="button"
+              name="save"
+              loading={isLoading}
             >
               Save
             </Button>

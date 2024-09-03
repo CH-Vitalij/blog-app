@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useRegisterUserMutation } from "../../service/api";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
-import { IRegisterFormInput, IRegisterServerError } from "../../types/SignUpTypes";
+import { IRegisterFormInput, IRegisterServerError } from "../../types/registerTypes";
 
 const SignUp: FC = () => {
   const {
@@ -44,11 +44,15 @@ const SignUp: FC = () => {
       console.error("Registration error:", err);
       if (isFetchBaseQueryError(err)) {
         const serverError = err as IRegisterServerError;
-        console.log("customError", serverError);
+        console.log("serverError", serverError);
+
         if (serverError?.status === 422) {
-          const { username, email } = serverError.data.errors;
-          if (username) setError("username", { type: "server", message: username });
-          if (email) setError("email", { type: "server", message: email });
+          Object.keys(serverError.data.errors).forEach((key) => {
+            setError(key as keyof IRegisterFormInput, {
+              type: "server",
+              message: `${key} ${serverError.data.errors[key]}`,
+            });
+          });
         }
       } else {
         console.error("An unexpected error occurred", err);
@@ -61,7 +65,7 @@ const SignUp: FC = () => {
   };
 
   if (isFetchBaseQueryError(error)) {
-    if (error?.status !== 422) return <h1>Something went wrong</h1>;
+    if (error?.status !== 422) return <h1>Sorry, Something went wrong</h1>;
   }
 
   return (
@@ -236,6 +240,7 @@ const SignUp: FC = () => {
               block
               type="primary"
               htmlType="submit"
+              name="create"
               loading={isLoading}
             >
               Create
