@@ -4,19 +4,24 @@ import classes from "./EditProfile.module.scss";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
 import { IEditProfileFormInput, IEditProfileServerError } from "../../types/editProfileTypes";
 import { useEditUserMutation } from "../../service/api";
-import { getUserData, setUserData } from "../../features/UserData";
-import { IUserData } from "../../types/userDataTypes";
+import { getToken } from "../../features/token";
 import { useNavigate } from "react-router-dom";
+import { useUserData } from "../../hooks/useUserData";
 
 const EditProfile = () => {
-  const { username, email, image } = getUserData() as IUserData;
+  const { data } = useUserData();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     setError,
   } = useForm<IEditProfileFormInput>({
-    defaultValues: { username, email, image },
+    defaultValues: {
+      username: data?.user.username,
+      email: data?.user.email,
+      image: data?.user.image,
+    },
     mode: "onSubmit",
   });
 
@@ -27,7 +32,7 @@ const EditProfile = () => {
   const onSubmit: SubmitHandler<IEditProfileFormInput> = async (data) => {
     console.log(data);
     try {
-      const { token } = getUserData() as IUserData;
+      const token = getToken() as string;
       const result = await editProfile({
         body: {
           user: {
@@ -42,8 +47,7 @@ const EditProfile = () => {
 
       if (result) {
         console.log("Edit success", result);
-        setUserData(result.user);
-        navigate("/");
+        navigate("/", { state: { userData: result.user } });
       }
     } catch (err) {
       console.error("Edit error:", err);
@@ -214,7 +218,7 @@ const EditProfile = () => {
                 <Input
                   className={`${classes.editProfileInputAvatar}`}
                   type="url"
-                  placeholder="Image image"
+                  placeholder="Avatar image"
                   name={name}
                   value={value}
                   onChange={onChange}

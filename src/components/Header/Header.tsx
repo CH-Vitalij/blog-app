@@ -1,23 +1,31 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Location, useLocation, useNavigate } from "react-router-dom";
 import classes from "./Header.module.scss";
 import { Avatar, Button } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 import { useAuth } from "../../hooks/useAuth";
-import { getUserData } from "../../features/UserData";
-import { IUserData } from "../../types/userDataTypes";
+
+import avatar from "../../assets/img/avatar.svg";
+import { useUserData } from "../../hooks/useUserData";
+
+interface LocationStateHeader {
+  userData: {
+    username: string;
+    email: string;
+    token: string;
+  };
+}
 
 const Header: React.FC = () => {
-  const { username, image } = getUserData() as IUserData;
-
   const { auth, signOut } = useAuth();
+  const { data } = useUserData();
+  const location = useLocation() as Location<LocationStateHeader>;
   const navigate = useNavigate();
 
   const handleLogOut = () => {
-    signOut(() => navigate("/"));
+    signOut(() => navigate("/", { state: { userData: location.state?.userData } }));
   };
 
   const handleCreateArticle = () => {
-    navigate("profile");
+    navigate("new-article", { state: { userData: location.state?.userData } });
   };
 
   return (
@@ -30,10 +38,12 @@ const Header: React.FC = () => {
           {auth ? (
             <>
               <Button onClick={handleCreateArticle}>Create article</Button>
-              <Link to="profile">{username}</Link>
+              <Link to="profile" state={{ userData: location.state?.userData }}>
+                {location.state?.userData ? location.state?.userData.username : data?.user.username}
+              </Link>
               <Avatar
-                src={image}
-                icon={<UserOutlined />}
+                style={{ width: "46px", height: "46px" }}
+                src={data?.user.image ? data?.user.image : avatar}
                 crossOrigin="anonymous"
                 size="large"
                 alt="avatar"

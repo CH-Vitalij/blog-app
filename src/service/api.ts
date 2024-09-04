@@ -3,15 +3,9 @@ import { IArticlesResponse, IArticleResponse } from "../types/articlesTypes";
 import { IRegisterUserRequest, IRegisterUserResponse } from "../types/registerTypes";
 import { ILoginUserRequest, ILoginUserResponse } from "../types/loginTypes";
 import { IEditProfileResponse, IEditProfileRequest } from "../types/editProfileTypes";
+import { IGetUserResponse } from "../types/userDataTypes";
 
-interface IGetUserResponse {
-  user: {
-    username: string;
-    email: string;
-    token: string;
-    image: string;
-  };
-}
+
 
 export const api = createApi({
   reducerPath: "Api",
