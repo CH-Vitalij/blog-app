@@ -1,7 +1,7 @@
 import { Link, Location, useLocation, useNavigate } from "react-router-dom";
 import classes from "./Header.module.scss";
 import { Button } from "antd";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/useAuth";
 
 interface LocationStateHeader {
   userData: {

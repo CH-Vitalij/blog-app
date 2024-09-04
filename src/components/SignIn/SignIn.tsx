@@ -6,7 +6,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useLoginUserMutation } from "../../service/api";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
 import { ILoginFormInput, ILoginServerError } from "../../types/loginTypes";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 interface LocationState {
   from?: string;
@@ -29,7 +29,7 @@ const SignIn: FC = () => {
   const fromPage = location.state?.from || "/";
   const navigate = useNavigate();
 
-  const { signIn } = useAuthContext();
+  const { signIn } = useAuth();
 
   useEffect(() => {
     setFocus("email");
