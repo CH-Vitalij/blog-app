@@ -4,24 +4,30 @@ import classes from "./EditProfile.module.scss";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
 import { IEditProfileFormInput, IEditProfileServerError } from "../../types/editProfileTypes";
 import { useEditUserMutation } from "../../service/api";
-import { getToken } from "../../features/token";
+import { getUserData, setUserData } from "../../features/UserData";
+import { IUserData } from "../../types/userDataTypes";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
+  const { username, email, image } = getUserData() as IUserData;
   const {
     control,
     handleSubmit,
     formState: { errors },
     setError,
   } = useForm<IEditProfileFormInput>({
+    defaultValues: { username, email, image },
     mode: "onSubmit",
   });
 
   const [editProfile, { isLoading, error }] = useEditUserMutation();
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<IEditProfileFormInput> = async (data) => {
     console.log(data);
     try {
-      const token = getToken() as string;
+      const { token } = getUserData() as IUserData;
       const result = await editProfile({
         body: {
           user: {
@@ -36,6 +42,8 @@ const EditProfile = () => {
 
       if (result) {
         console.log("Edit success", result);
+        setUserData(result.user);
+        navigate("/");
       }
     } catch (err) {
       console.error("Edit error:", err);
@@ -191,7 +199,16 @@ const EditProfile = () => {
               name="image"
               control={control}
               rules={{
-                required: "Image image is required",
+                validate: (url) => {
+                  return new Promise((resolve) => {
+                    if (!url) resolve(true);
+
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve("URL must be valid");
+                    img.src = url;
+                  });
+                },
               }}
               render={({ field: { name, value, onChange } }) => (
                 <Input

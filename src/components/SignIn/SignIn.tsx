@@ -47,9 +47,7 @@ const SignIn: FC = () => {
 
       if (result) {
         console.log("Login success", result);
-        signIn(result.user.token, () =>
-          navigate(fromPage, { state: { userData: result.user }, replace: true }),
-        );
+        signIn(result.user, () => navigate(fromPage, { replace: true }));
       }
     } catch (err) {
       console.error("Login error:", err);

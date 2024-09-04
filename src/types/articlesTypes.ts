@@ -1,11 +1,11 @@
-interface Author {
+interface IAuthor {
   username: string;
   bio: string;
   image: string;
   following: boolean;
 }
 
-export interface Articles {
+export interface IArticles {
   slug: string;
   title: string;
   description: string;
@@ -15,18 +15,18 @@ export interface Articles {
   updatedAt: string;
   favorited: boolean;
   favoritesCount: number;
-  author: Author;
+  author: IAuthor;
 }
 
-export interface ArticleState {
-  article?: Articles;
+export interface IArticleState {
+  article?: IArticles;
 }
 
-export interface ArticlesResponse {
-  articles: Articles[];
+export interface IArticlesResponse {
+  articles: IArticles[];
   articlesCount: number;
 }
 
-export interface ArticleResponse {
-  article: Articles;
+export interface IArticleResponse {
+  article: IArticles;
 }

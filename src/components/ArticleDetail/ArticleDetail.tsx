@@ -1,5 +1,5 @@
 import { useLocation, useParams } from "react-router-dom";
-import { ArticleState } from "../../types/articlesTypes";
+import { IArticleState } from "../../types/articlesTypes";
 import { Avatar, Button, Typography, Tag } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
 
@@ -13,7 +13,7 @@ const ArticleDetailPage: React.FC = () => {
 
   const location = useLocation();
 
-  const state = location.state as ArticleState | undefined;
+  const state = location.state as IArticleState | undefined;
   const initialArticle = state ? state.article : undefined;
   console.log("initialArticle", initialArticle);
 

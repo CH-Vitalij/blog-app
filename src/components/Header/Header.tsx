@@ -1,65 +1,58 @@
-import { Link, Location, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import classes from "./Header.module.scss";
-import { Button } from "antd";
-import { useAuthContext } from "../../hooks/useAuth";
-
-interface LocationStateHeader {
-  userData: {
-    username: string;
-    email: string;
-    token: string;
-  };
-}
+import { Avatar, Button } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { useAuth } from "../../hooks/useAuth";
+import { getUserData } from "../../features/UserData";
+import { IUserData } from "../../types/userDataTypes";
 
 const Header: React.FC = () => {
-  const location = useLocation() as Location<LocationStateHeader>;
-  console.log("userData", location.state?.userData);
-  const { auth, signOut } = useAuthContext();
+  const { username, image } = getUserData() as IUserData;
+
+  const { auth, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleLogOut = () => {
-    try {
-      signOut(() => navigate("/"));
-    } catch (err) {
-      console.error("Error during logout:", err);
-    }
+    signOut(() => navigate("/"));
   };
 
   const handleCreateArticle = () => {
-    navigate("profile", { state: { userData: location.state?.userData } });
+    navigate("profile");
   };
 
   return (
     <header className={`${classes.header}`}>
       <nav className={`${classes.headerNav}`}>
-        <Link
-          to="/"
-          className={`${classes.headerNavItem}`}
-          state={{ userData: location.state?.userData }}
-        >
+        <Link to="/" className={`${classes.headerNavItem}`}>
           Realworld Blog
         </Link>
         <div>
-          {!auth ? (
-            <Link to="login" className={`${classes.headerNavItem}`}>
-              Sign In
-            </Link>
-          ) : null}
-          {!auth ? (
-            <Link
-              to="register"
-              className={`${classes.headerNavItem} ${classes.headerNavItemRight}`}
-            >
-              Sign Up
-            </Link>
-          ) : null}
-          {auth ? <Button onClick={handleCreateArticle}>Create article</Button> : null}
           {auth ? (
-            <Link to="profile" state={{ userData: location.state?.userData }}>
-              {location.state?.userData?.username}
-            </Link>
-          ) : null}
-          {auth ? <Button onClick={handleLogOut}>Log Out</Button> : null}
+            <>
+              <Button onClick={handleCreateArticle}>Create article</Button>
+              <Link to="profile">{username}</Link>
+              <Avatar
+                src={image}
+                icon={<UserOutlined />}
+                crossOrigin="anonymous"
+                size="large"
+                alt="avatar"
+              />
+              <Button onClick={handleLogOut}>Log Out</Button>
+            </>
+          ) : (
+            <>
+              <Link to="login" className={`${classes.headerNavItem}`}>
+                Sign In
+              </Link>
+              <Link
+                to="register"
+                className={`${classes.headerNavItem} ${classes.headerNavItemRight}`}
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>

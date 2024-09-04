@@ -1,8 +1,9 @@
 import { createContext, FC, useState } from "react";
-import { useHaveToken } from "../hooks/useHaveToken";
+import { useHaveUserData } from "../hooks/useHaveUserData";
 import { AuthContextValue } from "../types/AuthContextTypes";
 import { AuthProviderProps } from "../types/AuthProviderTypes";
-import { removeToken, setToken } from "../features/token";
+import { removeUserData, setUserData } from "../features/UserData";
+import { IUserData } from "../types/userDataTypes";
 
 const initialValue: AuthContextValue = {
   auth: false,
@@ -13,16 +14,16 @@ const initialValue: AuthContextValue = {
 export const AuthContext = createContext<AuthContextValue>(initialValue);
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [auth, setAuth] = useState(useHaveToken());
+  const [auth, setAuth] = useState(useHaveUserData());
 
-  const signIn = (token: string, cb: () => void) => {
-    setToken(token);
+  const signIn = (userData: IUserData, cb: () => void) => {
+    setUserData(userData);
     setAuth(true);
     cb();
   };
 
   const signOut = (cb: () => void) => {
-    removeToken();
+    removeUserData();
     setAuth(false);
     cb();
   };
