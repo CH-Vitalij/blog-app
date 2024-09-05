@@ -83,7 +83,7 @@ const SignIn: FC = () => {
     <Form
       className={`${classes.signIn}`}
       name="login"
-      layout={"vertical"}
+      layout="vertical"
       autoComplete="off"
       onFinish={onFinish}
     >

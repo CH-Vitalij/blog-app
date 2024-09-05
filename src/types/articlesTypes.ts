@@ -30,3 +30,20 @@ export interface IArticlesResponse {
 export interface IArticleResponse {
   article: IArticles;
 }
+
+export interface ICreateArticleFormInput {
+  title: string;
+  description: string;
+  body: string;
+  valueTag: string;
+  tagList: { value: string }[];
+}
+
+export interface ICreateArticleRequest {
+  article: {
+    title: string;
+    description: string;
+    body: string;
+    tagList: string[];
+  };
+}

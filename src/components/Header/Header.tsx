@@ -36,16 +36,18 @@ const Header: React.FC = () => {
               >
                 Create article
               </Link>
-              <Link to="profile" state={{ userData }}>
-                {userData ? userData.username : data?.user.username}
+              <Link className={`${classes.headerNavItem}`} to="profile" state={{ userData }}>
+                <span className={`${classes.headerNavItemUsername}`}>
+                  {userData ? userData.username : data?.user.username}
+                </span>
+                <Avatar
+                  style={{ width: "46px", height: "46px" }}
+                  src={data?.user.image ? data?.user.image : avatar}
+                  crossOrigin="anonymous"
+                  size="large"
+                  alt="avatar"
+                />
               </Link>
-              <Avatar
-                style={{ width: "46px", height: "46px" }}
-                src={data?.user.image ? data?.user.image : avatar}
-                crossOrigin="anonymous"
-                size="large"
-                alt="avatar"
-              />
               <Link
                 className={`${classes.headerNavItem} ${classes.headerNavItemLogOut}`}
                 to="/"

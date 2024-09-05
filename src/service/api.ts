@@ -1,20 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IArticlesResponse, IArticleResponse } from "../types/articlesTypes";
+import { IArticlesResponse, IArticleResponse, ICreateArticleRequest } from "../types/articlesTypes";
 import { IRegisterUserRequest, IRegisterUserResponse } from "../types/registerTypes";
 import { ILoginUserRequest, ILoginUserResponse } from "../types/loginTypes";
 import { IEditProfileResponse, IEditProfileRequest } from "../types/editProfileTypes";
 import { IGetUserResponse } from "../types/userDataTypes";
 
-
-
 export const api = createApi({
   reducerPath: "Api",
+  tagTypes: ["Articles"],
   baseQuery: fetchBaseQuery({ baseUrl: "https://blog.kata.academy/api/" }),
   endpoints: (builder) => ({
     getArticles: builder.query<IArticlesResponse, { limit: string; offset: number }>({
       query: ({ limit = "5", offset = 0 }) => ({
         url: `articles?${limit && `limit=${limit}&${offset && `offset=${offset}`}`}`,
       }),
+      providesTags: ["Articles"],
     }),
     getArticle: builder.query<IArticleResponse, { slug: string }>({
       query: ({ slug }) => ({
@@ -45,6 +45,20 @@ export const api = createApi({
         body,
       }),
     }),
+    createArticle: builder.mutation<
+      IArticleResponse,
+      { body: ICreateArticleRequest; token: string }
+    >({
+      query: ({ body, token }) => ({
+        url: "articles",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Articles"],
+    }),
   }),
 });
 
@@ -55,4 +69,5 @@ export const {
   useLoginUserMutation,
   useGetUserQuery,
   useEditUserMutation,
+  useCreateArticleMutation,
 } = api;

@@ -24,7 +24,7 @@ const ArticlesList = () => {
   });
 
   if (isLoading) return <Spin size="large" fullscreen />;
-  if (isError) return <h1>Error!!!</h1>;
+  if (isError) return <h1>Sorry, Something went wrong</h1>;
   if (!isSuccess) return null;
 
   console.log("data", data);
@@ -50,7 +50,10 @@ const ArticlesList = () => {
         <List.Item key={item.slug} className={`${classes.articlesItem}`}>
           <div className={`${classes.articlesItemBody}`}>
             <div style={{ maxWidth: "635px" }}>
-              <Link to={`articles/${item.slug}`} state={{ article: item, userData: location.state?.userData }}>
+              <Link
+                to={`articles/${item.slug}`}
+                state={{ article: item, userData: location.state?.userData }}
+              >
                 <Typography.Title
                   className={`${classes.articlesItemBodyTitle}`}
                   level={5}

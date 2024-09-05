@@ -83,7 +83,7 @@ const EditProfile = () => {
     <Form
       className={`${classes.editProfile}`}
       name="editProfile"
-      layout={"vertical"}
+      layout="vertical"
       autoComplete="off"
       onFinish={onFinish}
     >

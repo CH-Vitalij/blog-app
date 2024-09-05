@@ -17,13 +17,12 @@
     font-weight: 400;
     font-size: 18px;
     text-align: left;
+    line-height: 28px;
     color: rgba(#000000d9, 0.85);
     text-decoration: none;
 
     &_real-world {
-      width: 147px;
-      height: 56px;
-      line-height: 56px;
+      padding: 12px 21px 16px 0px;
     }
 
     &_create-article {
@@ -33,6 +32,10 @@
       line-height: 22px;
       color: #52c41a;
       padding: 6px 10.23px 5.1px 10px;
+    }
+
+    &_username {
+      margin-right: 13px;
     }
 
     &_log-out {
