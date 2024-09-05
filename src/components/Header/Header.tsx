@@ -1,45 +1,43 @@
-import { Link, Location, useLocation, useNavigate } from "react-router-dom";
-import classes from "./Header.module.scss";
-import { Avatar, Button } from "antd";
+import { Link } from "react-router-dom";
+import { Avatar } from "antd";
 import { useAuth } from "../../hooks/useAuth";
+import { useUserData } from "../../hooks/useUserData";
+import { useLocationUserData } from "../../hooks/useLoactionUserData";
 
 import avatar from "../../assets/img/avatar.svg";
-import { useUserData } from "../../hooks/useUserData";
-
-interface LocationStateHeader {
-  userData: {
-    username: string;
-    email: string;
-    token: string;
-  };
-}
+import classes from "./Header.module.scss";
 
 const Header: React.FC = () => {
   const { auth, signOut } = useAuth();
   const { data } = useUserData();
-  const location = useLocation() as Location<LocationStateHeader>;
-  const navigate = useNavigate();
+  const userData = useLocationUserData();
 
   const handleLogOut = () => {
-    signOut(() => navigate("/", { state: { userData: location.state?.userData } }));
-  };
-
-  const handleCreateArticle = () => {
-    navigate("new-article", { state: { userData: location.state?.userData } });
+    signOut();
   };
 
   return (
     <header className={`${classes.header}`}>
       <nav className={`${classes.headerNav}`}>
-        <Link to="/" className={`${classes.headerNavItem}`}>
+        <Link
+          to="/"
+          className={`${classes.headerNavItem} ${classes.headerNavItemRealWorld}`}
+          state={{ userData }}
+        >
           Realworld Blog
         </Link>
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "19px" }}>
           {auth ? (
             <>
-              <Button onClick={handleCreateArticle}>Create article</Button>
-              <Link to="profile" state={{ userData: location.state?.userData }}>
-                {location.state?.userData ? location.state?.userData.username : data?.user.username}
+              <Link
+                className={`${classes.headerNavItem} ${classes.headerNavItemCreateArticle}`}
+                to="new-article"
+                state={{ userData }}
+              >
+                Create article
+              </Link>
+              <Link to="profile" state={{ userData }}>
+                {userData ? userData.username : data?.user.username}
               </Link>
               <Avatar
                 style={{ width: "46px", height: "46px" }}
@@ -48,16 +46,26 @@ const Header: React.FC = () => {
                 size="large"
                 alt="avatar"
               />
-              <Button onClick={handleLogOut}>Log Out</Button>
+              <Link
+                className={`${classes.headerNavItem} ${classes.headerNavItemLogOut}`}
+                to="/"
+                state={{ userData }}
+                onClick={handleLogOut}
+              >
+                Log Out
+              </Link>
             </>
           ) : (
             <>
-              <Link to="login" className={`${classes.headerNavItem}`}>
+              <Link
+                to="login"
+                className={`${classes.headerNavItem} ${classes.headerNavItemSignIn}`}
+              >
                 Sign In
               </Link>
               <Link
                 to="register"
-                className={`${classes.headerNavItem} ${classes.headerNavItemRight}`}
+                className={`${classes.headerNavItem} ${classes.headerNavItemSignUp}`}
               >
                 Sign Up
               </Link>

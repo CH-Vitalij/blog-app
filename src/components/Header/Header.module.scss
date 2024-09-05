@@ -16,17 +16,49 @@
     font-family: "Inter UI", sans-serif;
     font-weight: 400;
     font-size: 18px;
-    line-height: 28px;
     text-align: left;
     color: rgba(#000000d9, 0.85);
     text-decoration: none;
 
-    &_right {
+    &_real-world {
+      width: 147px;
+      height: 56px;
+      line-height: 56px;
+    }
+
+    &_create-article {
       border: 1px solid #52c41a;
       border-radius: 5px;
-      padding: 6px 18.7px 10px 18.7px;
+      font-size: 14px;
+      line-height: 22px;
       color: #52c41a;
-      margin-left: 19px;
+      padding: 6px 10.23px 5.1px 10px;
+    }
+
+    &_log-out {
+      border: 1px solid rgba(0, 0, 0, 0.75);
+      border-radius: 5px;
+      line-height: 28px;
+      color: rgba(0, 0, 0, 0.75);
+      padding: 6px 18.17px 10px;
+    }
+
+    &_sign-in {
+      width: 84px;
+      height: 35px;
+      line-height: 35px;
+      vertical-align: middle;
+    }
+
+    &_sign-up {
+      border: 1px solid #52c41a;
+      border-radius: 5px;
+      padding: 6px 18.7px 10px;
+      color: #52c41a;
+      height: 35px;
+      line-height: 35px;
+      vertical-align: middle;
+      box-sizing: content-box;
     }
   }
 }

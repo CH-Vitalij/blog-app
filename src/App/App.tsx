@@ -16,8 +16,6 @@ const App: React.FC = () => {
   const { isLoading, isError } = useUserData();
 
   useEffect(() => {
-    console.log("effect");
-
     if (auth) {
       const result = dispatch(api.endpoints.getUser.initiate({ token }));
 

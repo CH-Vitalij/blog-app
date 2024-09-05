@@ -1,4 +1,4 @@
-import { Form, Input, Button, ConfigProvider } from "antd";
+import { Form, Input, Button } from "antd";
 import classes from "./SignIn.module.scss";
 import { FC, useEffect } from "react";
 import { Location, Link, useLocation, useNavigate } from "react-router-dom";
@@ -80,100 +80,90 @@ const SignIn: FC = () => {
   }
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Form: {
-            verticalLabelPadding: 0,
-          },
-        },
-      }}
+    <Form
+      className={`${classes.signIn}`}
+      name="login"
+      layout={"vertical"}
+      autoComplete="off"
+      onFinish={onFinish}
     >
-      <Form
-        className={`${classes.signIn}`}
-        name="login"
-        layout={"vertical"}
-        autoComplete="off"
-        onFinish={onFinish}
-      >
-        <fieldset className={`${classes.signInFieldset}`}>
-          <legend className={`${classes.signInLegend}`}>Sign In</legend>
-          <Form.Item
-            className={`${classes.signInItemInput}`}
-            label="Email address"
-            validateStatus={errors.email ? "error" : ""}
-            help={errors.email?.message}
+      <fieldset className={`${classes.signInFieldset}`}>
+        <legend className={`${classes.signInLegend}`}>Sign In</legend>
+        <Form.Item
+          className={`${classes.signInItemInput}`}
+          label="Email address"
+          validateStatus={errors.email ? "error" : ""}
+          help={errors.email?.message}
+        >
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: "Email address is required",
+              pattern: {
+                value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+                message: "Please enter a valid email address",
+              },
+            }}
+            render={({ field: { name, value, onChange, ref } }) => (
+              <Input
+                className={`${classes.signInInputEmail}`}
+                type="email"
+                autoComplete="email"
+                name={name}
+                value={value}
+                onChange={onChange}
+                ref={ref}
+                placeholder="Email address"
+                aria-invalid={errors.email || errors.root?.serverError ? "true" : "false"}
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item
+          className={`${classes.signInItemInput}`}
+          label="Password"
+          validateStatus={errors.password ? "error" : ""}
+          help={errors.password?.message}
+        >
+          <Controller
+            name="password"
+            control={control}
+            rules={{
+              required: "Password is required",
+            }}
+            render={({ field: { name, value, onChange } }) => (
+              <Input.Password
+                className={`${classes.signInInputPassword}`}
+                visibilityToggle={false}
+                placeholder="Password"
+                name={name}
+                value={value}
+                onChange={onChange}
+                aria-invalid={errors.password || errors.root?.serverError ? "true" : "false"}
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item
+          className={`${classes.signInActions}`}
+          validateStatus={errors.root?.serverError?.message ? "error" : ""}
+          help={errors.root?.serverError?.message}
+        >
+          <Button
+            className={`${classes.signInBtn}`}
+            block
+            type="primary"
+            htmlType="submit"
+            name="login"
+            loading={isLoading}
           >
-            <Controller
-              name="email"
-              control={control}
-              rules={{
-                required: "Email address is required",
-                pattern: {
-                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
-                  message: "Please enter a valid email address",
-                },
-              }}
-              render={({ field: { name, value, onChange, ref } }) => (
-                <Input
-                  className={`${classes.signInInputEmail}`}
-                  type="email"
-                  autoComplete="email"
-                  name={name}
-                  value={value}
-                  onChange={onChange}
-                  ref={ref}
-                  placeholder="Email address"
-                  aria-invalid={errors.email || errors.root?.serverError ? "true" : "false"}
-                />
-              )}
-            />
-          </Form.Item>
-          <Form.Item
-            className={`${classes.signInItemInput}`}
-            label="Password"
-            validateStatus={errors.password ? "error" : ""}
-            help={errors.password?.message}
-          >
-            <Controller
-              name="password"
-              control={control}
-              rules={{
-                required: "Password is required",
-              }}
-              render={({ field: { name, value, onChange } }) => (
-                <Input.Password
-                  className={`${classes.signInInputPassword}`}
-                  visibilityToggle={false}
-                  placeholder="Password"
-                  name={name}
-                  value={value}
-                  onChange={onChange}
-                  aria-invalid={errors.password || errors.root?.serverError ? "true" : "false"}
-                />
-              )}
-            />
-          </Form.Item>
-          <Form.Item
-            className={`${classes.signInActions}`}
-            validateStatus={errors.root?.serverError?.message ? "error" : ""}
-            help={errors.root?.serverError?.message}
-          >
-            <Button
-              className={`${classes.signInBtn}`}
-              block
-              type="primary"
-              htmlType="submit"
-              name="login"
-              loading={isLoading}
-            >
-              Login
-            </Button>
-            Don`t have an account? <Link to="/register">Sign Up</Link>.
-          </Form.Item>
-        </fieldset>
-      </Form>
-    </ConfigProvider>
+            Login
+          </Button>
+          Don`t have an account? <Link to="/register">Sign Up</Link>.
+        </Form.Item>
+      </fieldset>
+    </Form>
   );
 };
 

@@ -20,6 +20,7 @@ import ErrorPage from "./pages/ErrorPage";
 import PrivateRoute from "../components/PrivateRoute";
 import { AuthProvider } from "../context/AuthProvider";
 import EditProfilePage from "./pages/EditProfilePage";
+import { ConfigProvider } from "antd";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,8 +44,18 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ConfigProvider
+      theme={{
+        components: {
+          Form: {
+            verticalLabelPadding: 0,
+          },
+        },
+      }}
+    >
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ConfigProvider>
   </Provider>,
 );

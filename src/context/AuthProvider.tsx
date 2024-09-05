@@ -21,10 +21,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     cb();
   };
 
-  const signOut = (cb: () => void) => {
+  const signOut = () => {
     removeToken();
     setAuth(false);
-    cb();
   };
 
   const value = { auth, signIn, signOut };
