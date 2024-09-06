@@ -7,14 +7,14 @@ import { IGetUserResponse } from "../types/userDataTypes";
 
 export const api = createApi({
   reducerPath: "Api",
-  tagTypes: ["Articles"],
+  tagTypes: ["Articles", "UserData"],
   baseQuery: fetchBaseQuery({ baseUrl: "https://blog.kata.academy/api/" }),
   endpoints: (builder) => ({
     getArticles: builder.query<IArticlesResponse, { limit: string; offset: number }>({
       query: ({ limit = "5", offset = 0 }) => ({
         url: `articles?${limit && `limit=${limit}&${offset && `offset=${offset}`}`}`,
       }),
-      providesTags: ["Articles"],
+      providesTags: ["Articles", "UserData"],
     }),
     getArticle: builder.query<IArticleResponse, { slug: string }>({
       query: ({ slug }) => ({
@@ -34,6 +34,7 @@ export const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
+      providesTags: ["UserData"],
     }),
     editUser: builder.mutation<IEditProfileResponse, { body: IEditProfileRequest; token: string }>({
       query: ({ body, token }) => ({
@@ -44,6 +45,7 @@ export const api = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["UserData"],
     }),
     createArticle: builder.mutation<
       IArticleResponse,
@@ -59,6 +61,16 @@ export const api = createApi({
       }),
       invalidatesTags: ["Articles"],
     }),
+    deleteArticle: builder.mutation<void, { slug: string; token: string }>({
+      query: ({ slug, token }) => ({
+        url: `articles/${slug}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Articles"],
+    }),
   }),
 });
 
@@ -70,4 +82,5 @@ export const {
   useGetUserQuery,
   useEditUserMutation,
   useCreateArticleMutation,
+  useDeleteArticleMutation,
 } = api;

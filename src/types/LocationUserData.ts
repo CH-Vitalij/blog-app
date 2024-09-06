@@ -3,5 +3,6 @@ export interface LocationStateUserData {
     username: string;
     email: string;
     token: string;
+    image: string;
   };
 }

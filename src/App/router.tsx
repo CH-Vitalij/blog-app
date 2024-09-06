@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "../store";
+import { AuthProvider } from "../context/AuthProvider";
+import { ConfigProvider } from "antd";
 
 import "../assets/styles/index.scss";
 
@@ -20,9 +22,7 @@ import ErrorPage from "./pages/ErrorPage";
 import PrivateRoute from "../components/PrivateRoute";
 import EditProfilePage from "./pages/EditProfilePage";
 import CreateArticlePage from "./pages/CreateArticlePage";
-
-import { AuthProvider } from "../context/AuthProvider";
-import { ConfigProvider } from "antd";
+import EditArticlePage from "./pages/EditArticlePage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +35,7 @@ const router = createBrowserRouter(
       <Route element={<PrivateRoute />}>
         <Route path="profile" element={<EditProfilePage />} />
         <Route path="new-article" element={<CreateArticlePage />} />
-        <Route path="articles/:slug/edit" element={<h1>Редактирование статьи</h1>} />
+        <Route path="articles/:slug/edit" element={<EditArticlePage />} />
       </Route>
     </Route>,
   ),

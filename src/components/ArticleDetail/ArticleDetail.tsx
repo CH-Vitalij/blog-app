@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { IArticleState } from "../../types/articlesTypes";
 import { Avatar, Button, Typography, Tag } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
@@ -6,10 +6,24 @@ import { HeartOutlined } from "@ant-design/icons";
 import Markdown from "react-markdown";
 
 import classes from "./ArticleDetail.module.scss";
-import { useGetArticleQuery } from "../../service/api";
+import { useDeleteArticleMutation, useGetArticleQuery, useGetUserQuery } from "../../service/api";
+import { useAuth } from "../../hooks/useAuth";
+import { getToken } from "../../features/token";
+import { skipToken } from "@reduxjs/toolkit/query/react";
 
 const ArticleDetailPage: React.FC = () => {
+  const { auth } = useAuth();
+  const token = getToken() as string;
+  const { username } = useGetUserQuery(auth ? { token } : skipToken, {
+    selectFromResult: ({ data }) => ({
+      username: data?.user.username ?? null,
+    }),
+  });
+
+  console.log("fetchUsername", username);
+
   const { slug } = useParams();
+  const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -21,6 +35,7 @@ const ArticleDetailPage: React.FC = () => {
     data: fetchedArticle,
     isLoading,
     isError,
+    error,
   } = useGetArticleQuery(
     {
       slug: slug || "",
@@ -30,11 +45,24 @@ const ArticleDetailPage: React.FC = () => {
     },
   );
 
+  const [deleteArticle] = useDeleteArticleMutation();
+
+  const handleDeleteArticle = async () => {
+    try {
+      await deleteArticle({ slug, token });
+      console.log("Succcess to delete article");
+      navigate("/");
+    } catch (err) {
+      console.error("Failed to delete article:", err);
+    }
+  };
+
   console.log("fetchedArticle", fetchedArticle);
 
   const article = initialArticle || fetchedArticle?.article;
 
   console.log("article", article);
+  console.log("error", error);
 
   if (isLoading) return <h1>Loading...</h1>;
   if (isError) return <h1>Sorry, something went wrong</h1>;
@@ -71,13 +99,19 @@ const ArticleDetailPage: React.FC = () => {
             </Typography.Paragraph>
           </div>
           <div className={`${classes.articleBodyAuthorData}`}>
-            <div>
+            <div style={{ flexGrow: 1 }}>
               <div className={`${classes.articleBodyAuthorDataName}`}>
                 {article?.author.username}
               </div>
               <div className={`${classes.articleBodyAuthorDataDate}`}>March 5, 2020</div>
             </div>
             <Avatar src={article?.author.image} size={46} />
+            {username === article?.author.username ? (
+              <div>
+                <Button onClick={handleDeleteArticle}>Delete</Button>
+                <Button>Edit</Button>
+              </div>
+            ) : null}
           </div>
         </div>
         <Typography.Paragraph className={`${classes.articleBodyText}`}>

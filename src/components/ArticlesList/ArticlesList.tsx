@@ -1,33 +1,26 @@
 import { HeartOutlined } from "@ant-design/icons";
-import { Avatar, List, Button, Typography, Tag, Tooltip, Spin } from "antd";
+import { Avatar, List, Button, Typography, Tag, Tooltip } from "antd";
 import classes from "./ArticlesList.module.scss";
 import { useGetArticlesQuery } from "../../service/api";
-import { useSearchParams, Link, useLocation, Location } from "react-router-dom";
-
-interface LocationStateHeader {
-  userData: {
-    username: string;
-    email: string;
-    token: string;
-  };
-}
+import { useSearchParams, Link } from "react-router-dom";
 
 const ArticlesList = () => {
-  const location = useLocation() as Location<LocationStateHeader>;
   const [searchParams, setSearchParams] = useSearchParams();
 
   const articlesQuery = Number(searchParams.get("articles")) || 1;
 
-  const { data, isLoading, isSuccess, isFetching, isError } = useGetArticlesQuery({
+  const {
+    data: articles,
+    isSuccess,
+    isFetching,
+  } = useGetArticlesQuery({
     limit: "5",
     offset: (articlesQuery - 1) * 5,
   });
 
-  if (isLoading) return <Spin size="large" fullscreen />;
-  if (isError) return <h1>Sorry, Something went wrong</h1>;
   if (!isSuccess) return null;
 
-  console.log("data", data);
+  console.log("articles", articles);
 
   return (
     <List
@@ -40,20 +33,17 @@ const ArticlesList = () => {
         },
         current: articlesQuery,
         pageSize: 5,
-        total: data.articlesCount,
+        total: articles.articlesCount,
         align: "center",
         hideOnSinglePage: true,
         showSizeChanger: false,
       }}
-      dataSource={data.articles}
+      dataSource={articles.articles}
       renderItem={(item) => (
         <List.Item key={item.slug} className={`${classes.articlesItem}`}>
           <div className={`${classes.articlesItemBody}`}>
             <div style={{ maxWidth: "635px" }}>
-              <Link
-                to={`articles/${item.slug}`}
-                state={{ article: item, userData: location.state?.userData }}
-              >
+              <Link to={`articles/${item.slug}`} state={{ article: item }}>
                 <Typography.Title
                   className={`${classes.articlesItemBodyTitle}`}
                   level={5}

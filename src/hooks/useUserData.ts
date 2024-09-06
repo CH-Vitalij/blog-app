@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { api } from "../service/api";
+import { skipToken } from "@reduxjs/toolkit/query/react";
 import { getToken } from "../features/token";
-import { useAppSelector } from "./useAppSelector";
+import { useGetUserQuery } from "../service/api";
+import { useAuth } from "./useAuth";
 
-export const useUserData = () => {
+export const seUserData = () => {
+  const { auth } = useAuth();
   const token = getToken() as string;
-  const selectUserData = useMemo(() => api.endpoints.getUser.select({ token }), [token]);
-  const result = useAppSelector(selectUserData);
-  return result;
-};
+  const { data } = useGetUserQuery(auth ? { token } : skipToken);
+  return data
+}

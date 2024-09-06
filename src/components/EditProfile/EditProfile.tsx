@@ -1,17 +1,19 @@
 import { Button, Form, Input } from "antd";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
-import classes from "./EditProfile.module.scss";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
 import { IEditProfileFormInput, IEditProfileServerError } from "../../types/editProfileTypes";
-import { useEditUserMutation } from "../../service/api";
+import { useEditUserMutation, useGetUserQuery } from "../../service/api";
 import { getToken } from "../../features/token";
 import { useNavigate } from "react-router-dom";
-import { useUserData } from "../../hooks/useUserData";
-import { useLocationUserData } from "../../hooks/useLoactionUserData";
+
+import classes from "./EditProfile.module.scss";
+import { useAuth } from "../../hooks/useAuth";
+import { skipToken } from "@reduxjs/toolkit/query/react";
 
 const EditProfile = () => {
-  const { data } = useUserData();
-  const userData = useLocationUserData();
+  const token = getToken() as string;
+  const { auth } = useAuth();
+  const { data: fetchUserData } = useGetUserQuery(auth ? { token } : skipToken);
 
   const {
     control,
@@ -20,9 +22,9 @@ const EditProfile = () => {
     setError,
   } = useForm<IEditProfileFormInput>({
     defaultValues: {
-      username: userData ? userData.username : data?.user.username,
-      email: data?.user.email,
-      image: data?.user.image,
+      username: fetchUserData?.user.username,
+      email: fetchUserData?.user.email,
+      image: fetchUserData?.user.image,
     },
     mode: "onSubmit",
   });
@@ -31,17 +33,16 @@ const EditProfile = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<IEditProfileFormInput> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IEditProfileFormInput> = async (formData) => {
+    console.log(formData);
     try {
-      const token = getToken() as string;
       const result = await editProfile({
         body: {
           user: {
-            email: data.email,
-            username: data.username,
-            image: data.image,
-            password: data.newPassword,
+            email: formData.email,
+            username: formData.username,
+            image: formData.image,
+            password: formData.newPassword,
           },
         },
         token,
@@ -49,7 +50,7 @@ const EditProfile = () => {
 
       if (result) {
         console.log("Edit success", result);
-        navigate("/", { state: { userData: result.user } });
+        navigate("/");
       }
     } catch (err) {
       console.error("Edit error:", err);

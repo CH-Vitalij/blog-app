@@ -80,7 +80,8 @@
     display: flex;
     gap: 12px;
     max-width: 261px;
-    max-height: 46px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   &__body-author-data-name {
@@ -88,13 +89,14 @@
     font-size: 18px;
     line-height: 28px;
     color: rgba(0, 0, 0, 0.85);
-    text-align: center;
+    text-align: right;
   }
 
   &__body-author-data-date {
     height: 22px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.5);
+    text-align: right;
   }
 }
 

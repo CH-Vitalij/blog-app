@@ -1,30 +1,34 @@
 import { Outlet } from "react-router-dom";
-import Header from "../components/Header";
-import { useEffect } from "react";
-import { api } from "../service/api";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useGetArticlesQuery, useGetUserQuery } from "../service/api";
 import { useAuth } from "../hooks/useAuth";
-import { useUserData } from "../hooks/useUserData";
 import { Spin } from "antd";
 import { getToken } from "../features/token";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+
+import Header from "../components/Header";
 
 const App: React.FC = () => {
-  const dispatch = useAppDispatch();
   const { auth } = useAuth();
   const token = getToken() as string;
 
-  const { isLoading, isError } = useUserData();
+  const {
+    isLoading: isLoadingUserData,
+    isError: isErrorUserData,
+    isFetching: isFetchingUserData,
+  } = useGetUserQuery(auth ? { token } : skipToken);
 
-  useEffect(() => {
-    if (auth) {
-      const result = dispatch(api.endpoints.getUser.initiate({ token }));
+  const {
+    isLoading: isLoadingArticles,
+    isError: isErrorArticles,
+    isFetching: isFetchingArticles,
+  } = useGetArticlesQuery({
+    limit: "5",
+    offset: 0,
+  });
 
-      return () => result.unsubscribe();
-    }
-  }, [dispatch, token, auth]);
-
-  if (isLoading) return <Spin size="large" tip="Loading" fullscreen />;
-  if (isError) return <h1>Sorry, Something went wrong</h1>;
+  if (isLoadingUserData || isLoadingArticles || isFetchingUserData || isFetchingArticles)
+    return <Spin size="large" tip="Loading" fullscreen />;
+  if (isErrorUserData || isErrorArticles) return <h1>Sorry, Something went wrong</h1>;
 
   return (
     <>
