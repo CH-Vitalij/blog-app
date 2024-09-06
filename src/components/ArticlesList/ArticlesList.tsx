@@ -73,7 +73,7 @@ const ArticlesList = () => {
                 }
                 disabled={!auth}
               >
-                12
+                {item.favoritesCount}
               </Button>
               <div style={{ display: "flex", gap: "8px" }}>
                 {item.tagList.map((el: string, i: number) => (

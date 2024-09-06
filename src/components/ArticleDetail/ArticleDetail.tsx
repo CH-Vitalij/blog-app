@@ -1,7 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Avatar, Button, Typography, Tag, Spin, Popconfirm } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
-import { useDeleteArticleMutation, useGetArticleQuery, useGetUserQuery } from "../../service/api";
+import {
+  useDeleteArticleMutation,
+  useDeleteFavoriteMutation,
+  useGetArticleQuery,
+  useGetUserQuery,
+  usePostFavoriteMutation,
+} from "../../service/api";
 import { useAuth } from "../../hooks/useAuth";
 import { getToken } from "../../features/token";
 import { skipToken } from "@reduxjs/toolkit/query/react";
@@ -18,8 +24,6 @@ const ArticleDetailPage: React.FC = () => {
     }),
   });
 
-  console.log("fetchUsername", username);
-
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -27,7 +31,7 @@ const ArticleDetailPage: React.FC = () => {
     data: fetchedArticle,
     isLoading: isLoadingArticle,
     isError: isErrorArticle,
-  } = useGetArticleQuery({ slug: slug ?? "" });
+  } = useGetArticleQuery({ slug: slug ?? "", token: auth ? token : undefined });
 
   const [deleteArticle] = useDeleteArticleMutation();
 
@@ -41,10 +45,30 @@ const ArticleDetailPage: React.FC = () => {
     }
   };
 
-  const article = fetchedArticle?.article;
+  const [addFavorite] = usePostFavoriteMutation();
+  const [deleteFavorite] = useDeleteFavoriteMutation();
+
+  const handleFavorite = async (isFavorited: boolean) => {
+    console.log("isFavorited", isFavorited);
+
+    try {
+      if (isFavorited) {
+        await deleteFavorite({ slug: slug ?? "", token });
+        console.log("Success to deleteFavorite article");
+      } else {
+        await addFavorite({ slug: slug ?? "", token });
+        console.log("Success to addFavorite article");
+      }
+    } catch (err) {
+      console.log("Failed to favorite article:", err);
+    }
+  };
 
   if (isLoadingArticle) return <Spin size="large" tip="Loading" fullscreen />;
   if (isErrorArticle) return <h1>Sorry, something went wrong</h1>;
+
+  const article = fetchedArticle?.article;
+  console.log("article", fetchedArticle);
 
   return (
     <div className={`${classes.article}`}>
@@ -55,8 +79,13 @@ const ArticleDetailPage: React.FC = () => {
               {article?.title}
             </Typography.Title>
             <Button
-              className={`${classes.articleBodyBtn} ${classes.articleBodyBtnHeart}`}
+              className={`${classes.articleBodyBtn} ${classes.articleBodyBtnHeart} ${
+                article?.favorited ? classes.articleBodyBtnHeartFavorite : ""
+              }`}
               type="text"
+              onClick={() => {
+                void handleFavorite(article?.favorited as boolean);
+              }}
               icon={
                 <HeartOutlined
                   className={`${classes.articleBodyBtnIcon}`}
@@ -65,7 +94,7 @@ const ArticleDetailPage: React.FC = () => {
               }
               disabled={!auth}
             >
-              12
+              {article?.favoritesCount}
             </Button>
             <div className={`${classes.articleBodyTagList}`}>
               {article?.tagList.map((el: string, i: number) => (

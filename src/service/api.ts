@@ -16,10 +16,18 @@ export const api = createApi({
       }),
       providesTags: ["Articles", "UserData"],
     }),
-    getArticle: builder.query<IArticleResponse, { slug: string }>({
-      query: ({ slug }) => ({
-        url: `articles/${slug}`,
-      }),
+    getArticle: builder.query<IArticleResponse, { slug: string; token?: string }>({
+      query: ({ slug, token }) => {
+        const headers: Record<string, string> = {};
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+        return {
+          url: `articles/${slug}`,
+          headers,
+        };
+      },
+      providesTags: ["UserData"],
     }),
     registerUser: builder.mutation<IRegisterUserResponse, IRegisterUserRequest>({
       query: (body) => ({ url: "users", method: "POST", body }),
@@ -79,6 +87,20 @@ export const api = createApi({
         },
         method: "POST",
       }),
+      async onQueryStarted({ slug, token }, { dispatch, queryFulfilled }) {
+        const result = dispatch(
+          api.util.updateQueryData("getArticle", { slug, token }, (draftFavorite) => {
+            console.log(JSON.stringify(draftFavorite));
+            draftFavorite.article.favorited = true;
+            draftFavorite.article.favoritesCount = draftFavorite.article.favoritesCount + 1;
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          result.undo();
+        }
+      },
     }),
     deleteFavorite: builder.mutation<IArticleResponse, { slug: string; token: string }>({
       query: ({ slug, token }) => ({
@@ -88,6 +110,20 @@ export const api = createApi({
         },
         method: "DELETE",
       }),
+      async onQueryStarted({ slug, token }, { dispatch, queryFulfilled }) {
+        const result = dispatch(
+          api.util.updateQueryData("getArticle", { slug, token }, (draftFavorite) => {
+            console.log(JSON.stringify(draftFavorite));
+            draftFavorite.article.favorited = false;
+            draftFavorite.article.favoritesCount = draftFavorite.article.favoritesCount - 1;
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          result.undo();
+        }
+      },
     }),
   }),
 });
@@ -101,4 +137,6 @@ export const {
   useEditUserMutation,
   useCreateArticleMutation,
   useDeleteArticleMutation,
+  usePostFavoriteMutation,
+  useDeleteFavoriteMutation,
 } = api;
