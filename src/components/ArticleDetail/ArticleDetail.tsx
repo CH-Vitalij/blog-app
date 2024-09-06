@@ -63,6 +63,7 @@ const ArticleDetailPage: React.FC = () => {
                   style={{ fontSize: "16px" }}
                 />
               }
+              disabled={!auth}
             >
               12
             </Button>
@@ -101,7 +102,12 @@ const ArticleDetailPage: React.FC = () => {
                     Delete
                   </Button>
                 </Popconfirm>
-                <Button className={`${classes.articleBodyBtn} ${classes.articleBodyBtnEdit}`}>
+                <Button // сделать Link
+                  className={`${classes.articleBodyBtn} ${classes.articleBodyBtnEdit}`}
+                  onClick={() => {
+                    navigate("edit");
+                  }}
+                >
                   Edit
                 </Button>
               </div>
