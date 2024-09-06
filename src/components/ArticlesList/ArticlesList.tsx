@@ -3,8 +3,10 @@ import { Avatar, List, Button, Typography, Tag, Tooltip } from "antd";
 import classes from "./ArticlesList.module.scss";
 import { useGetArticlesQuery } from "../../service/api";
 import { useSearchParams, Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const ArticlesList = () => {
+  const { auth } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const articlesQuery = Number(searchParams.get("articles")) || 1;
@@ -43,7 +45,7 @@ const ArticlesList = () => {
         <List.Item key={item.slug} className={`${classes.articlesItem}`}>
           <div className={`${classes.articlesItemBody}`}>
             <div style={{ maxWidth: "635px" }}>
-              <Link to={`articles/${item.slug}`} state={{ article: item }}>
+              <Link to={`articles/${item.slug}`}>
                 <Typography.Title
                   className={`${classes.articlesItemBodyTitle}`}
                   level={5}
@@ -69,7 +71,7 @@ const ArticlesList = () => {
                     style={{ fontSize: "16px" }}
                   />
                 }
-                disabled
+                disabled={!auth}
               >
                 12
               </Button>

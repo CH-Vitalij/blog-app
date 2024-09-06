@@ -75,5 +75,18 @@
     padding: 8px 16px 8px 16px;
     border-radius: 4px;
     margin-bottom: 8px;
+
+    &_add-tag {
+      width: 136px;
+      border-color: #1890ff !important;
+      color: #1890ff !important;
+    }
+
+    &_delete-tag {
+      width: 120px;
+      background-color: #ffffff;
+      border-color: #f5222d !important;
+      color: #f5222d !important;
+    }
   }
 }

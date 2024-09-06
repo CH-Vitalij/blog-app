@@ -60,10 +60,6 @@ const SignUp: FC = () => {
     }
   };
 
-  const onFinish = () => {
-    void handleSubmit(onSubmit)();
-  };
-
   if (isFetchBaseQueryError(error)) {
     if (error?.status !== 422) return <h1>Sorry, Something went wrong</h1>;
   }
@@ -83,7 +79,9 @@ const SignUp: FC = () => {
         name="register"
         layout="vertical"
         autoComplete="off"
-        onFinish={onFinish}
+        onFinish={() => {
+          void handleSubmit(onSubmit)();
+        }}
       >
         <fieldset className={`${classes.signUpFieldset}`}>
           <legend className={`${classes.signUpLegend}`}>Create new account</legend>

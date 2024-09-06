@@ -72,10 +72,6 @@ const EditProfile = () => {
     }
   };
 
-  const onFinish = () => {
-    void handleSubmit(onSubmit)();
-  };
-
   if (isFetchBaseQueryError(error)) {
     if (error?.status !== 422) return <h1>Sorry, Something went wrong</h1>;
   }
@@ -86,7 +82,9 @@ const EditProfile = () => {
       name="editProfile"
       layout="vertical"
       autoComplete="off"
-      onFinish={onFinish}
+      onFinish={() => {
+        void handleSubmit(onSubmit)();
+      }}
     >
       <fieldset className={`${classes.editProfileFieldset}`}>
         <legend className={`${classes.editProfileLegend}`}>Edit Profile</legend>

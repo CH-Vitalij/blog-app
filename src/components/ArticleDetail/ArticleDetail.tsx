@@ -1,15 +1,13 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { IArticleState } from "../../types/articlesTypes";
-import { Avatar, Button, Typography, Tag } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+import { Avatar, Button, Typography, Tag, Spin, Popconfirm } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
-
-import Markdown from "react-markdown";
-
-import classes from "./ArticleDetail.module.scss";
 import { useDeleteArticleMutation, useGetArticleQuery, useGetUserQuery } from "../../service/api";
 import { useAuth } from "../../hooks/useAuth";
 import { getToken } from "../../features/token";
 import { skipToken } from "@reduxjs/toolkit/query/react";
+
+import Markdown from "react-markdown";
+import classes from "./ArticleDetail.module.scss";
 
 const ArticleDetailPage: React.FC = () => {
   const { auth } = useAuth();
@@ -25,47 +23,28 @@ const ArticleDetailPage: React.FC = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
 
-  const location = useLocation();
-
-  const state = location.state as IArticleState | undefined;
-  const initialArticle = state ? state.article : undefined;
-  console.log("initialArticle", initialArticle);
-
   const {
     data: fetchedArticle,
-    isLoading,
-    isError,
-    error,
-  } = useGetArticleQuery(
-    {
-      slug: slug || "",
-    },
-    {
-      skip: initialArticle !== undefined || !slug,
-    },
-  );
+    isLoading: isLoadingArticle,
+    isError: isErrorArticle,
+  } = useGetArticleQuery({ slug: slug ?? "" });
 
   const [deleteArticle] = useDeleteArticleMutation();
 
   const handleDeleteArticle = async () => {
     try {
-      await deleteArticle({ slug, token });
-      console.log("Succcess to delete article");
+      await deleteArticle({ slug: slug ?? "", token }).unwrap();
+      console.log("Success to delete article");
       navigate("/");
     } catch (err) {
       console.error("Failed to delete article:", err);
     }
   };
 
-  console.log("fetchedArticle", fetchedArticle);
+  const article = fetchedArticle?.article;
 
-  const article = initialArticle || fetchedArticle?.article;
-
-  console.log("article", article);
-  console.log("error", error);
-
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <h1>Sorry, something went wrong</h1>;
+  if (isLoadingArticle) return <Spin size="large" tip="Loading" fullscreen />;
+  if (isErrorArticle) return <h1>Sorry, something went wrong</h1>;
 
   return (
     <div className={`${classes.article}`}>
@@ -76,7 +55,7 @@ const ArticleDetailPage: React.FC = () => {
               {article?.title}
             </Typography.Title>
             <Button
-              className={`${classes.articleBodyBtn}`}
+              className={`${classes.articleBodyBtn} ${classes.articleBodyBtnHeart}`}
               type="text"
               icon={
                 <HeartOutlined
@@ -108,8 +87,23 @@ const ArticleDetailPage: React.FC = () => {
             <Avatar src={article?.author.image} size={46} />
             {username === article?.author.username ? (
               <div>
-                <Button onClick={handleDeleteArticle}>Delete</Button>
-                <Button>Edit</Button>
+                <Popconfirm
+                  title=""
+                  description="Are you sure to delete this article?"
+                  onConfirm={() => {
+                    void handleDeleteArticle();
+                  }}
+                  okText="Yes"
+                  cancelText="No"
+                  placement="rightTop"
+                >
+                  <Button className={`${classes.articleBodyBtn} ${classes.articleBodyBtnDelete}`}>
+                    Delete
+                  </Button>
+                </Popconfirm>
+                <Button className={`${classes.articleBodyBtn} ${classes.articleBodyBtnEdit}`}>
+                  Edit
+                </Button>
               </div>
             ) : null}
           </div>

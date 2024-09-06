@@ -69,10 +69,6 @@ const SignIn: FC = () => {
     }
   };
 
-  const onFinish = () => {
-    void handleSubmit(onSubmit)();
-  };
-
   if (isFetchBaseQueryError(error)) {
     if (error?.status !== 422) return <h1>Sorry, Something went wrong</h1>;
   }
@@ -83,7 +79,9 @@ const SignIn: FC = () => {
       name="login"
       layout="vertical"
       autoComplete="off"
-      onFinish={onFinish}
+      onFinish={() => {
+        void handleSubmit(onSubmit)();
+      }}
     >
       <fieldset className={`${classes.signInFieldset}`}>
         <legend className={`${classes.signInLegend}`}>Sign In</legend>

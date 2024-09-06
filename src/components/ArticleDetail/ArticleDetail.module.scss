@@ -33,12 +33,32 @@
   }
 
   &__body-btn {
-    width: 34px;
-    height: 22px;
     line-height: 22px;
     font-family: inherit;
     font-size: inherit;
-    color: rgba(0, 0, 0, 0.75);
+
+    &_heart {
+      width: 34px;
+      height: 22px;
+      color: rgba(0, 0, 0, 0.75);
+    }
+
+    &_delete {
+      width: 78px;
+      height: 31.1px;
+      border-radius: 5px;
+      margin-right: 12px;
+      border: 1px solid #f5222d;
+      color: #f5222d;
+    }
+
+    &_edit {
+      width: 65.23px;
+      height: 31.1px;
+      border-radius: 5px;
+      border: 1px solid #52c41a;
+      color: #52c41a;
+    }
   }
 
   &__body-tag-list {
@@ -52,7 +72,6 @@
     color: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 2px;
-    max-width: 80px;
     height: 20px;
     text-align: center;
     vertical-align: middle;

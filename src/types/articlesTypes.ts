@@ -18,10 +18,6 @@ export interface IArticles {
   author: IAuthor;
 }
 
-export interface IArticleState {
-  article?: IArticles;
-}
-
 export interface IArticlesResponse {
   articles: IArticles[];
   articlesCount: number;

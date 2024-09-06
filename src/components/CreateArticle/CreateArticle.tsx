@@ -59,10 +59,6 @@ const CreateArticle = () => {
     }
   };
 
-  const onFinish = () => {
-    void handleSubmit(onSubmit)();
-  };
-
   if (isError) return <h1>Sorry, Something went wrong</h1>;
 
   return (
@@ -71,7 +67,9 @@ const CreateArticle = () => {
       name="createArticle"
       layout="vertical"
       autoComplete="off"
-      onFinish={onFinish}
+      onFinish={() => {
+        void handleSubmit(onSubmit)();
+      }}
     >
       <fieldset className={`${classes.createArticleFieldset}`}>
         <legend className={`${classes.createArticleLegend}`}>Create new article</legend>
@@ -175,7 +173,11 @@ const CreateArticle = () => {
                       />
                     )}
                   />
-                  <Button danger onClick={() => remove(index)}>
+                  <Button
+                    className={`${classes.createArticleBtn} ${classes.createArticleBtnDeleteTag}`}
+                    danger
+                    onClick={() => remove(index)}
+                  >
                     Delete
                   </Button>
                 </Form.Item>
@@ -195,6 +197,7 @@ const CreateArticle = () => {
                 )}
               />
               <Button
+                className={`${classes.createArticleBtn} ${classes.createArticleBtnAddTag}`}
                 type="primary"
                 ghost
                 onClick={() => {
@@ -209,14 +212,14 @@ const CreateArticle = () => {
                   }
                 }}
               >
-                Add Tag
+                Add tag
               </Button>
             </Form.Item>
           )}
         </Form.List>
         <Form.Item className={`${classes.createArticleActions}`}>
           <Button
-            className={`${classes.createArticleBtn}`}
+            className={`${classes.createArticleBtn} ${classes.createArticleBtnSend}`}
             type="primary"
             htmlType="submit"
             name="send"
