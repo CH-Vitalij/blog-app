@@ -71,6 +71,24 @@ export const api = createApi({
       }),
       invalidatesTags: ["Articles"],
     }),
+    postFavorite: builder.mutation<IArticleResponse, { slug: string; token: string }>({
+      query: ({ slug, token }) => ({
+        url: `articles/${slug}/favorite`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "POST",
+      }),
+    }),
+    deleteFavorite: builder.mutation<IArticleResponse, { slug: string; token: string }>({
+      query: ({ slug, token }) => ({
+        url: `articles/${slug}/favorite`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
