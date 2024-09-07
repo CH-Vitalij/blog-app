@@ -4,6 +4,7 @@ import autoprefixer from "autoprefixer";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/blog-app",
   plugins: [react()],
   css: {
     modules: {

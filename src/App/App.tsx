@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { useGetArticlesQuery, useGetUserQuery } from "../service/api";
 import { useAuth } from "../hooks/useAuth";
@@ -35,7 +36,9 @@ const App: React.FC = () => {
     <>
       <Header />
       <main style={{ display: "flex", justifyContent: "center" }}>
-        <Outlet />
+        <Suspense fallback={<Spin size="large" tip="Loading" fullscreen />}>
+          <Outlet />
+        </Suspense>
       </main>
     </>
   );
