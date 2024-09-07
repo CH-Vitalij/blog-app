@@ -24,6 +24,7 @@ const App: React.FC = () => {
   } = useGetArticlesQuery({
     limit: "5",
     offset: 0,
+    token: auth ? token : undefined,
   });
 
   if (isLoadingUserData || isLoadingArticles || isFetchingUserData || isFetchingArticles)
