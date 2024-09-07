@@ -10,10 +10,20 @@ export const api = createApi({
   tagTypes: ["Articles", "UserData"],
   baseQuery: fetchBaseQuery({ baseUrl: "https://blog.kata.academy/api/" }),
   endpoints: (builder) => ({
-    getArticles: builder.query<IArticlesResponse, { limit: string; offset: number }>({
-      query: ({ limit = "5", offset = 0 }) => ({
-        url: `articles?${limit && `limit=${limit}&${offset && `offset=${offset}`}`}`,
-      }),
+    getArticles: builder.query<
+      IArticlesResponse,
+      { limit: string; offset: number; token?: string }
+    >({
+      query: ({ limit = "5", offset = 0, token }) => {
+        const headers: Record<string, string> = {};
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+        return {
+          url: `articles?${limit && `limit=${limit}&${`offset=${offset}`}`}`,
+          headers,
+        };
+      },
       providesTags: ["Articles", "UserData"],
     }),
     getArticle: builder.query<IArticleResponse, { slug: string; token?: string }>({
@@ -88,17 +98,32 @@ export const api = createApi({
         method: "POST",
       }),
       async onQueryStarted({ slug, token }, { dispatch, queryFulfilled }) {
-        const result = dispatch(
-          api.util.updateQueryData("getArticle", { slug, token }, (draftFavorite) => {
-            console.log(JSON.stringify(draftFavorite));
-            draftFavorite.article.favorited = true;
-            draftFavorite.article.favoritesCount = draftFavorite.article.favoritesCount + 1;
+        const resultArticle = dispatch(
+          api.util.updateQueryData("getArticle", { slug, token }, (draftArticle) => {
+            draftArticle.article.favorited = true;
+            draftArticle.article.favoritesCount += 1;
           }),
+        );
+
+        const resultArticles = dispatch(
+          api.util.updateQueryData(
+            "getArticles",
+            { limit: "5", offset: 0, token },
+            (draftArticles) => {
+              const targetArticle = draftArticles.articles.find((article) => article.slug === slug);
+
+              if (targetArticle) {
+                targetArticle.favorited = true;
+                targetArticle.favoritesCount += 1;
+              }
+            },
+          ),
         );
         try {
           await queryFulfilled;
         } catch {
-          result.undo();
+          resultArticle.undo();
+          resultArticles.undo();
         }
       },
     }),
@@ -111,17 +136,32 @@ export const api = createApi({
         method: "DELETE",
       }),
       async onQueryStarted({ slug, token }, { dispatch, queryFulfilled }) {
-        const result = dispatch(
-          api.util.updateQueryData("getArticle", { slug, token }, (draftFavorite) => {
-            console.log(JSON.stringify(draftFavorite));
-            draftFavorite.article.favorited = false;
-            draftFavorite.article.favoritesCount = draftFavorite.article.favoritesCount - 1;
+        const resultArticle = dispatch(
+          api.util.updateQueryData("getArticle", { slug, token }, (draftArticle) => {
+            draftArticle.article.favorited = false;
+            draftArticle.article.favoritesCount -= 1;
           }),
+        );
+
+        const resultArticles = dispatch(
+          api.util.updateQueryData(
+            "getArticles",
+            { limit: "5", offset: 0, token },
+            (draftArticles) => {
+              const targetArticle = draftArticles.articles.find((article) => article.slug === slug);
+
+              if (targetArticle) {
+                targetArticle.favorited = false;
+                targetArticle.favoritesCount -= 1;
+              }
+            },
+          ),
         );
         try {
           await queryFulfilled;
         } catch {
-          result.undo();
+          resultArticle.undo();
+          resultArticles.undo();
         }
       },
     }),

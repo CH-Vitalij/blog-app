@@ -80,6 +80,10 @@
       width: 136px;
       border-color: #1890ff !important;
       color: #1890ff !important;
+
+      &:hover {
+        background-color: #1890ff1a !important;
+      }
     }
 
     &_delete-tag {

@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Avatar, Button, Typography, Tag, Spin, Popconfirm } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
+import HeartIcon from "../HeartIcon";
 import {
   useDeleteArticleMutation,
   useDeleteFavoriteMutation,
@@ -49,8 +50,6 @@ const ArticleDetailPage: React.FC = () => {
   const [deleteFavorite] = useDeleteFavoriteMutation();
 
   const handleFavorite = async (isFavorited: boolean) => {
-    console.log("isFavorited", isFavorited);
-
     try {
       if (isFavorited) {
         await deleteFavorite({ slug: slug ?? "", token });
@@ -79,18 +78,19 @@ const ArticleDetailPage: React.FC = () => {
               {article?.title}
             </Typography.Title>
             <Button
-              className={`${classes.articleBodyBtn} ${classes.articleBodyBtnHeart} ${
-                article?.favorited ? classes.articleBodyBtnHeartFavorite : ""
-              }`}
+              className={`${classes.articleBodyBtn} ${classes.articleBodyBtnHeart}`}
               type="text"
               onClick={() => {
                 void handleFavorite(article?.favorited as boolean);
               }}
               icon={
-                <HeartOutlined
-                  className={`${classes.articleBodyBtnIcon}`}
-                  style={{ fontSize: "16px" }}
-                />
+                article?.favorited ? (
+                  <HeartIcon
+                    className={`${classes.articleBodyBtnIcon} ${classes.articleBodyBtnIconFavorite}`}
+                  />
+                ) : (
+                  <HeartOutlined className={`${classes.articleBodyBtnIcon}`} />
+                )
               }
               disabled={!auth}
             >
@@ -131,7 +131,7 @@ const ArticleDetailPage: React.FC = () => {
                     Delete
                   </Button>
                 </Popconfirm>
-                <Button // сделать Link
+                <Button
                   className={`${classes.articleBodyBtn} ${classes.articleBodyBtnEdit}`}
                   onClick={() => {
                     navigate("edit");

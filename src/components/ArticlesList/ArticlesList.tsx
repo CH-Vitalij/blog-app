@@ -1,12 +1,17 @@
 import { HeartOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Typography, Tag, Tooltip } from "antd";
-import classes from "./ArticlesList.module.scss";
-import { useGetArticlesQuery } from "../../service/api";
+import { useDeleteFavoriteMutation, useGetArticlesQuery, usePostFavoriteMutation } from "../../service/api";
 import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { getToken } from "../../features/token";
+import { IArticles } from "../../types/articlesTypes";
+
+import HeartIcon from "../HeartIcon";
+import classes from "./ArticlesList.module.scss";
 
 const ArticlesList = () => {
   const { auth } = useAuth();
+  const token = getToken() as string;
   const [searchParams, setSearchParams] = useSearchParams();
 
   const articlesQuery = Number(searchParams.get("articles")) || 1;
@@ -18,7 +23,26 @@ const ArticlesList = () => {
   } = useGetArticlesQuery({
     limit: "5",
     offset: (articlesQuery - 1) * 5,
+    token: auth ? token : undefined,
   });
+
+  const [addFavorite] = usePostFavoriteMutation();
+  const [deleteFavorite] = useDeleteFavoriteMutation();
+
+  const handleFavorite = async (article: IArticles) => {
+
+    try {
+      if (article.favorited) {
+        await deleteFavorite({ slug: article.slug ?? "", token });
+        console.log("Success to deleteFavorite article");
+      } else {
+        await addFavorite({ slug: article.slug ?? "", token });
+        console.log("Success to addFavorite article");
+      }
+    } catch (err) {
+      console.log("Failed to favorite article:", err);
+    }
+  };
 
   if (!isSuccess) return null;
 
@@ -63,13 +87,19 @@ const ArticlesList = () => {
                 </Typography.Title>
               </Link>
               <Button
-                className={`${classes.articlesItemBodyBtn}`}
+                className={`${classes.articlesItemBodyBtn} ${classes.articlesItemBodyBtnHeart}`}
                 type="text"
+                onClick={() => {
+                  void handleFavorite(item);
+                }}
                 icon={
-                  <HeartOutlined
-                    className={`${classes.articlesItemBodyBtnIcon}`}
-                    style={{ fontSize: "16px" }}
-                  />
+                  item?.favorited ? (
+                    <HeartIcon
+                      className={`${classes.articlesItemBodyBtnIcon} ${classes.articlesItemBodyBtnIconFavorite}`}
+                    />
+                  ) : (
+                    <HeartOutlined className={`${classes.articlesItemBodyBtnIcon}`} />
+                  )
                 }
                 disabled={!auth}
               >
@@ -78,7 +108,12 @@ const ArticlesList = () => {
               <div style={{ display: "flex", gap: "8px" }}>
                 {item.tagList.map((el: string, i: number) => (
                   <Tag key={item.slug + i} className={`${classes.articlesItemBodyTag}`}>
-                    <Tooltip title={el} destroyTooltipOnHide={true}>
+                    <Tooltip
+                      title={el}
+                      destroyTooltipOnHide={true}
+                      color="rgb(0, 152, 255, 0.85)"
+                      placement="bottomLeft"
+                    >
                       {el}
                     </Tooltip>
                   </Tag>
@@ -91,7 +126,7 @@ const ArticlesList = () => {
                   tooltip: {
                     title: item.description,
                     destroyTooltipOnHide: true,
-                    placement: "rightBottom",
+                    placement: "bottom",
                     color: "rgb(0, 152, 255, 0.85)",
                   },
                 }}
