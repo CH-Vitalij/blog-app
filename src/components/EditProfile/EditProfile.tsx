@@ -34,7 +34,6 @@ const EditProfile = () => {
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<IEditProfileFormInput> = async (formData) => {
-    console.log(formData);
     try {
       const result = await editProfile({
         body: {
@@ -49,14 +48,12 @@ const EditProfile = () => {
       }).unwrap();
 
       if (result) {
-        console.log("Edit success", result);
         navigate("/");
       }
     } catch (err) {
       console.error("Edit error:", err);
       if (isFetchBaseQueryError(err)) {
         const serverError = err as IEditProfileServerError;
-        console.log("serverError", serverError);
 
         if (serverError?.status === 422) {
           Object.keys(serverError.data.errors).forEach((key) => {

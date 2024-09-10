@@ -26,32 +26,31 @@ const ArticlesList = () => {
     data: articles,
     isSuccess,
     isFetching,
+    isError: isErrorArticles,
   } = useGetArticlesQuery({
     limit: "5",
     offset: (articlesQuery - 1) * 5,
     token: auth ? token : undefined,
   });
 
-  const [addFavorite] = usePostFavoriteMutation();
-  const [deleteFavorite] = useDeleteFavoriteMutation();
+  const [addFavorite, { isError: isErrorAddFavorite }] = usePostFavoriteMutation();
+  const [deleteFavorite, { isError: isErrorDeleteFavorite }] = useDeleteFavoriteMutation();
 
   const handleFavorite = async (article: IArticles) => {
     try {
       if (article.favorited) {
         await deleteFavorite({ slug: article.slug ?? "", token });
-        console.log("Success to deleteFavorite article");
       } else {
         await addFavorite({ slug: article.slug ?? "", token });
-        console.log("Success to addFavorite article");
       }
     } catch (err) {
-      console.log("Failed to favorite article:", err);
+      console.error("Failed to favorite article:", err);
     }
   };
 
+  if (isErrorArticles || isErrorAddFavorite || isErrorDeleteFavorite)
+    return <h1>Sorry, something went wrong</h1>;
   if (!isSuccess) return null;
-
-  console.log("articles", articles);
 
   return (
     <List

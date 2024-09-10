@@ -43,7 +43,7 @@ export const api = createApi({
       query: (body) => ({ url: "users", method: "POST", body }),
     }),
     loginUser: builder.mutation<ILoginUserResponse, ILoginUserRequest>({
-      query: (body) => ({ url: "users/login", method: "POST", body }),
+      query: (body) => ({ url: "users/logins", method: "POST", body }),
     }),
     getUser: builder.query<IGetUserResponse, { token: string }>({
       query: ({ token }) => ({
@@ -100,7 +100,24 @@ export const api = createApi({
         },
         method: "DELETE",
       }),
-      invalidatesTags: ["Articles"],
+      async onQueryStarted({ slug, token }, { dispatch, queryFulfilled }) {
+        const resultArticles = dispatch(
+          api.util.updateQueryData(
+            "getArticles",
+            { limit: "5", offset: 0, token },
+            (draftArticles) => {
+              draftArticles.articles = draftArticles.articles.filter(
+                (article) => article.slug !== slug,
+              );
+            },
+          ),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          resultArticles.undo();
+        }
+      },
     }),
     postFavorite: builder.mutation<IArticleResponse, { slug: string; token: string }>({
       query: ({ slug, token }) => ({

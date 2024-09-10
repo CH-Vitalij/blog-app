@@ -19,7 +19,6 @@ interface ArticleFormProps {
 }
 
 const ArticleForm: FC<ArticleFormProps> = ({ type = "create", legend = "" }) => {
-  console.log("type", type);
   const token = getToken() as string;
   const { slug } = useParams();
 
@@ -68,8 +67,6 @@ const ArticleForm: FC<ArticleFormProps> = ({ type = "create", legend = "" }) => 
   });
 
   const onSubmit: SubmitHandler<IArticleFormInput> = async (formData) => {
-    console.log("onSubmit");
-    console.log(formData);
     try {
       const tagList = formData.tagList.map((item) => item.tag);
 
@@ -87,7 +84,6 @@ const ArticleForm: FC<ArticleFormProps> = ({ type = "create", legend = "" }) => 
         }).unwrap();
 
         if (result) {
-          console.log("Create Article success", result);
           navigate("/");
         }
       } else if (type === "edit") {
@@ -105,7 +101,6 @@ const ArticleForm: FC<ArticleFormProps> = ({ type = "create", legend = "" }) => 
         }).unwrap();
 
         if (result2) {
-          console.log("Edit Article success", result2);
           navigate(-1);
         }
       }

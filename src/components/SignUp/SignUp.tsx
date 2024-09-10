@@ -37,14 +37,12 @@ const SignUp: FC = () => {
       }).unwrap();
 
       if (result) {
-        console.log("Registration success", result);
         navigate("/login");
       }
     } catch (err) {
       console.error("Registration error:", err);
       if (isFetchBaseQueryError(err)) {
         const serverError = err as IRegisterServerError;
-        console.log("serverError", serverError);
 
         if (serverError?.status === 422) {
           Object.keys(serverError.data.errors).forEach((key) => {

@@ -37,40 +37,36 @@ const ArticleDetailPage: React.FC = () => {
     isError: isErrorArticle,
   } = useGetArticleQuery({ slug: slug ?? "", token: auth ? token : undefined });
 
-  const [deleteArticle] = useDeleteArticleMutation();
+  const [deleteArticle, { isError: isErrorDeleteArticle }] = useDeleteArticleMutation();
 
   const handleDeleteArticle = async () => {
     try {
       await deleteArticle({ slug: slug ?? "", token }).unwrap();
-      console.log("Success to delete article");
       navigate("/");
     } catch (err) {
       console.error("Failed to delete article:", err);
     }
   };
 
-  const [addFavorite] = usePostFavoriteMutation();
-  const [deleteFavorite] = useDeleteFavoriteMutation();
+  const [addFavorite, { isError: isErrorAddFavorite }] = usePostFavoriteMutation();
+  const [deleteFavorite, { isError: isErrorDeleteFavorite }] = useDeleteFavoriteMutation();
 
   const handleFavorite = async (isFavorited: boolean) => {
     try {
       if (isFavorited) {
         await deleteFavorite({ slug: slug ?? "", token });
-        console.log("Success to deleteFavorite article");
       } else {
         await addFavorite({ slug: slug ?? "", token });
-        console.log("Success to addFavorite article");
       }
     } catch (err) {
-      console.log("Failed to favorite article:", err);
+      console.error("Failed to favorite article:", err);
     }
   };
 
   if (isLoadingArticle) return <Spin size="large" tip="Loading" fullscreen />;
-  if (isErrorArticle) return <h1>Sorry, something went wrong</h1>;
+  if (isErrorArticle || isErrorAddFavorite || isErrorDeleteFavorite || isErrorDeleteArticle) return <h1>Sorry, something went wrong</h1>;
 
   const article = fetchedArticle?.article;
-  console.log("article", fetchedArticle);
 
   return (
     <div className={`${classes.article}`}>
@@ -117,7 +113,10 @@ const ArticleDetailPage: React.FC = () => {
               </div>
               <div className={`${classes.articleBodyAuthorDataDate}`}>March 5, 2020</div>
             </div>
-            <Avatar src={article?.author.image !== pic ? article?.author.image : avatar} size={46} />
+            <Avatar
+              src={article?.author.image !== pic ? article?.author.image : avatar}
+              size={46}
+            />
             {username === article?.author.username ? (
               <div>
                 <Popconfirm

@@ -36,7 +36,6 @@ const SignIn: FC = () => {
   }, [setFocus]);
 
   const onSubmit: SubmitHandler<ILoginFormInput> = async (data) => {
-    console.log(data);
     try {
       const result = await loginUser({
         user: {
@@ -46,14 +45,12 @@ const SignIn: FC = () => {
       }).unwrap();
 
       if (result) {
-        console.log("Login success", result);
         signIn(result.user.token, () => navigate(fromPage, { replace: true }));
       }
     } catch (err) {
       console.error("Login error:", err);
       if (isFetchBaseQueryError(err)) {
         const serverError = err as ILoginServerError;
-        console.log("serverError", serverError);
 
         if (serverError?.status === 422) {
           Object.keys(serverError.data.errors).forEach((key) => {
