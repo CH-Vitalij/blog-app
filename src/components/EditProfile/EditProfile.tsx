@@ -5,10 +5,10 @@ import { IEditProfileFormInput, IEditProfileServerError } from "../../types/edit
 import { useEditUserMutation, useGetUserQuery } from "../../service/api";
 import { getToken } from "../../features/token";
 import { useNavigate } from "react-router-dom";
-
-import classes from "./EditProfile.module.scss";
 import { useAuth } from "../../hooks/useAuth";
 import { skipToken } from "@reduxjs/toolkit/query/react";
+
+import classes from "./EditProfile.module.scss";
 
 const EditProfile = () => {
   const token = getToken() as string;
@@ -41,7 +41,7 @@ const EditProfile = () => {
           user: {
             email: formData.email,
             username: formData.username,
-            image: formData.image,
+            image: formData.image !== "" ? formData.image : null,
             password: formData.newPassword,
           },
         },
@@ -202,7 +202,11 @@ const EditProfile = () => {
                   const img = new Image();
                   img.onload = () => resolve(true);
                   img.onerror = () => resolve("URL must be valid");
-                  img.src = url;
+                  if (url !== null) {
+                    img.src = url;
+                  } else {
+                    resolve("URL must be valid");
+                  }
                 });
               },
             }}
@@ -212,7 +216,7 @@ const EditProfile = () => {
                 type="url"
                 placeholder="Avatar image"
                 name={name}
-                value={value}
+                value={value || ""}
                 onChange={onChange}
                 aria-invalid={errors.image ? "true" : "false"}
               />

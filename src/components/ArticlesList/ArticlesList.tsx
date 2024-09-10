@@ -1,6 +1,10 @@
 import { HeartOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Typography, Tag, Tooltip } from "antd";
-import { useDeleteFavoriteMutation, useGetArticlesQuery, usePostFavoriteMutation } from "../../service/api";
+import {
+  useDeleteFavoriteMutation,
+  useGetArticlesQuery,
+  usePostFavoriteMutation,
+} from "../../service/api";
 import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { getToken } from "../../features/token";
@@ -8,6 +12,8 @@ import { IArticles } from "../../types/articlesTypes";
 
 import HeartIcon from "../HeartIcon";
 import classes from "./ArticlesList.module.scss";
+import avatar from "../../assets/img/avatar.svg";
+const pic = "https://static.productionready.io/images/smiley-cyrus.jpg";
 
 const ArticlesList = () => {
   const { auth } = useAuth();
@@ -30,7 +36,6 @@ const ArticlesList = () => {
   const [deleteFavorite] = useDeleteFavoriteMutation();
 
   const handleFavorite = async (article: IArticles) => {
-
     try {
       if (article.favorited) {
         await deleteFavorite({ slug: article.slug ?? "", token });
@@ -141,7 +146,7 @@ const ArticlesList = () => {
                 </div>
                 <div className={`${classes.articlesItemBodyAuthorDataDate}`}>March 5, 2020</div>
               </div>
-              <Avatar src={item.author.image} size={46} />
+              <Avatar src={item.author.image !== pic ? item.author.image : avatar} size={46} />
             </div>
           </div>
         </List.Item>

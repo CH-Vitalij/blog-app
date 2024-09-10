@@ -1,7 +1,7 @@
-import EditArticle from "../../components/EditArticle";
+import ArticleForm from "../../components/ArticleForm";
 
 const EditArticlePage = () => {
-  return <EditArticle />;
+  return <ArticleForm type="edit" legend="Edit article" />;
 };
 
 export default EditArticlePage;

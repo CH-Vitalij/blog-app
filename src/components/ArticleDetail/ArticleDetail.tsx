@@ -15,13 +15,16 @@ import { skipToken } from "@reduxjs/toolkit/query/react";
 
 import Markdown from "react-markdown";
 import classes from "./ArticleDetail.module.scss";
+import avatar from "../../assets/img/avatar.svg";
+
+const pic = "https://static.productionready.io/images/smiley-cyrus.jpg";
 
 const ArticleDetailPage: React.FC = () => {
   const { auth } = useAuth();
   const token = getToken() as string;
   const { username } = useGetUserQuery(auth ? { token } : skipToken, {
     selectFromResult: ({ data }) => ({
-      username: data?.user.username ?? null,
+      username: data?.user.username,
     }),
   });
 
@@ -114,7 +117,7 @@ const ArticleDetailPage: React.FC = () => {
               </div>
               <div className={`${classes.articleBodyAuthorDataDate}`}>March 5, 2020</div>
             </div>
-            <Avatar src={article?.author.image} size={46} />
+            <Avatar src={article?.author.image !== pic ? article?.author.image : avatar} size={46} />
             {username === article?.author.username ? (
               <div>
                 <Popconfirm

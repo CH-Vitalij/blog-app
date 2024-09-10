@@ -1,7 +1,7 @@
-import CreateArticle from "../../components/CreateArticle";
+import ArticleForm from "../../components/ArticleForm";
 
 const CreateArticlePage = () => {
-  return <CreateArticle />;
+  return <ArticleForm legend='Create new article' />;
 };
 
 export default CreateArticlePage;

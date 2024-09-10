@@ -10,7 +10,7 @@ export interface ILoginUserResponse {
     username: string;
     email: string;
     token: string;
-    image: string;
+    image: string | null;
   };
 }
 

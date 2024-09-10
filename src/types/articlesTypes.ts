@@ -1,7 +1,7 @@
 interface IAuthor {
   username: string;
   bio: string;
-  image: string;
+  image: string | null;
   following: boolean;
 }
 
@@ -27,15 +27,19 @@ export interface IArticleResponse {
   article: IArticles;
 }
 
-export interface ICreateArticleFormInput {
+type TagObject = {
+  tag: string;
+};
+
+export interface IArticleFormInput {
   title: string;
   description: string;
   body: string;
-  valueTag: string;
-  tagList: { value: string }[];
+  newTag: string;
+  tagList: TagObject[];
 }
 
-export interface ICreateArticleRequest {
+export interface IArticleFormRequest {
   article: {
     title: string;
     description: string;

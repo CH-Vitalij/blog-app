@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IArticlesResponse, IArticleResponse, ICreateArticleRequest } from "../types/articlesTypes";
+import { IArticlesResponse, IArticleResponse, IArticleFormRequest } from "../types/articlesTypes";
 import { IRegisterUserRequest, IRegisterUserResponse } from "../types/registerTypes";
 import { ILoginUserRequest, ILoginUserResponse } from "../types/loginTypes";
 import { IEditProfileResponse, IEditProfileRequest } from "../types/editProfileTypes";
@@ -37,7 +37,7 @@ export const api = createApi({
           headers,
         };
       },
-      providesTags: ["UserData"],
+      providesTags: ["Articles", "UserData"],
     }),
     registerUser: builder.mutation<IRegisterUserResponse, IRegisterUserRequest>({
       query: (body) => ({ url: "users", method: "POST", body }),
@@ -65,16 +65,29 @@ export const api = createApi({
       }),
       invalidatesTags: ["UserData"],
     }),
-    createArticle: builder.mutation<
+    createArticle: builder.mutation<IArticleResponse, { body: IArticleFormRequest; token: string }>(
+      {
+        query: ({ body, token }) => ({
+          url: "articles",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          method: "POST",
+          body,
+        }),
+        invalidatesTags: ["Articles"],
+      },
+    ),
+    editArticle: builder.mutation<
       IArticleResponse,
-      { body: ICreateArticleRequest; token: string }
+      { body: IArticleFormRequest; slug: string; token: string }
     >({
-      query: ({ body, token }) => ({
-        url: "articles",
+      query: ({ body, slug, token }) => ({
+        url: `articles/${slug}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        method: "POST",
+        method: "PUT",
         body,
       }),
       invalidatesTags: ["Articles"],
@@ -176,6 +189,7 @@ export const {
   useGetUserQuery,
   useEditUserMutation,
   useCreateArticleMutation,
+  useEditArticleMutation,
   useDeleteArticleMutation,
   usePostFavoriteMutation,
   useDeleteFavoriteMutation,
