@@ -15,20 +15,18 @@ const App: React.FC = () => {
   const {
     isLoading: isLoadingUserData,
     isError: isErrorUserData,
-    isFetching: isFetchingUserData,
   } = useGetUserQuery(auth ? { token } : skipToken);
 
   const {
     isLoading: isLoadingArticles,
     isError: isErrorArticles,
-    isFetching: isFetchingArticles,
   } = useGetArticlesQuery({
     limit: "5",
     offset: 0,
     token: auth ? token : undefined,
   });
 
-  if (isLoadingUserData || isLoadingArticles || isFetchingUserData || isFetchingArticles)
+  if (isLoadingUserData || isLoadingArticles)
     return <Spin size="large" tip="Loading" fullscreen />;
   if (isErrorUserData || isErrorArticles) return <h1>Sorry, Something went wrong</h1>;
 

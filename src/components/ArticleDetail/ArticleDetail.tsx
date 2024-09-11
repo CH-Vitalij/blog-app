@@ -37,6 +37,7 @@ const ArticleDetailPage: React.FC = () => {
     data: fetchedArticle,
     isLoading: isLoadingArticle,
     isError: isErrorArticle,
+    isSuccess,
   } = useGetArticleQuery({ slug: slug ?? "", token: auth ? token : undefined });
 
   const [deleteArticle, { isError: isErrorDeleteArticle }] = useDeleteArticleMutation();
@@ -68,8 +69,9 @@ const ArticleDetailPage: React.FC = () => {
   if (isLoadingArticle) return <Spin size="large" tip="Loading" fullscreen />;
   if (isErrorArticle || isErrorAddFavorite || isErrorDeleteFavorite || isErrorDeleteArticle)
     return <h1>Sorry, something went wrong</h1>;
+  if (!isSuccess) return null;
 
-  const article = fetchedArticle?.article;
+  const article = fetchedArticle.article;
 
   return (
     <div className={`${classes.article}`}>
@@ -77,16 +79,16 @@ const ArticleDetailPage: React.FC = () => {
         <div className={`${classes.articleBodyHeader}`}>
           <div style={{ maxWidth: "635px" }}>
             <Typography.Title className={`${classes.articleBodyTitle}`} level={5}>
-              {article?.title}
+              {article.title}
             </Typography.Title>
             <Button
               className={`${classes.articleBodyBtn} ${classes.articleBodyBtnHeart}`}
               type="text"
               onClick={() => {
-                void handleFavorite(article?.favorited as boolean);
+                void handleFavorite(article.favorited);
               }}
               icon={
-                article?.favorited ? (
+                article.favorited ? (
                   <HeartIcon
                     className={`${classes.articleBodyBtnIcon} ${classes.articleBodyBtnIconFavorite}`}
                   />
@@ -96,33 +98,33 @@ const ArticleDetailPage: React.FC = () => {
               }
               disabled={!auth}
             >
-              {article?.favoritesCount}
+              {article.favoritesCount}
             </Button>
             <div className={`${classes.articleBodyTagList}`}>
-              {article?.tagList.map((el: string, i: number) => (
-                <Tag key={article?.slug + i} className={`${classes.articleBodyTag}`}>
+              {article.tagList.map((el: string, i: number) => (
+                <Tag key={article.slug + i} className={`${classes.articleBodyTag}`}>
                   {el}
                 </Tag>
               ))}
             </div>
             <Typography.Paragraph className={`${classes.articleBodyDescription}`}>
-              {article?.description}
+              {article.description}
             </Typography.Paragraph>
           </div>
           <div className={`${classes.articleBodyAuthorData}`}>
             <div style={{ flexGrow: 1 }}>
               <div className={`${classes.articleBodyAuthorDataName}`}>
-                {article?.author.username}
+                {article.author.username}
               </div>
               <div className={`${classes.articleBodyAuthorDataDate}`}>
                 {format(new Date(article.createdAt), "MMMM d, yyyy", { locale: enGB })}
               </div>
             </div>
             <Avatar
-              src={article?.author.image !== pic ? article?.author.image : avatar}
+              src={article.author.image !== pic ? article.author.image : avatar}
               size={46}
             />
-            {username === article?.author.username ? (
+            {username === article.author.username ? (
               <div>
                 <Popconfirm
                   title=""
@@ -157,7 +159,7 @@ const ArticleDetailPage: React.FC = () => {
                 img: ({ ...props }) => <img {...props} className={`${classes.image}`} alt="" />,
               }}
             >
-              {article?.body}
+              {article.body}
             </Markdown>
           }
         </Typography.Paragraph>
