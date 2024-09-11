@@ -12,6 +12,8 @@ import {
 import { useAuth } from "../../hooks/useAuth";
 import { getToken } from "../../features/token";
 import { skipToken } from "@reduxjs/toolkit/query/react";
+import { format } from "date-fns";
+import { enGB } from "date-fns/locale";
 
 import Markdown from "react-markdown";
 import classes from "./ArticleDetail.module.scss";
@@ -64,7 +66,8 @@ const ArticleDetailPage: React.FC = () => {
   };
 
   if (isLoadingArticle) return <Spin size="large" tip="Loading" fullscreen />;
-  if (isErrorArticle || isErrorAddFavorite || isErrorDeleteFavorite || isErrorDeleteArticle) return <h1>Sorry, something went wrong</h1>;
+  if (isErrorArticle || isErrorAddFavorite || isErrorDeleteFavorite || isErrorDeleteArticle)
+    return <h1>Sorry, something went wrong</h1>;
 
   const article = fetchedArticle?.article;
 
@@ -111,7 +114,9 @@ const ArticleDetailPage: React.FC = () => {
               <div className={`${classes.articleBodyAuthorDataName}`}>
                 {article?.author.username}
               </div>
-              <div className={`${classes.articleBodyAuthorDataDate}`}>March 5, 2020</div>
+              <div className={`${classes.articleBodyAuthorDataDate}`}>
+                {format(new Date(article.createdAt), "MMMM d, yyyy", { locale: enGB })}
+              </div>
             </div>
             <Avatar
               src={article?.author.image !== pic ? article?.author.image : avatar}
