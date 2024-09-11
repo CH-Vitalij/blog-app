@@ -14,8 +14,18 @@ import { ConfigProvider } from "antd";
 import "../assets/styles/index.scss";
 
 import HomePage from "./pages/HomePage";
+import PrivateRoute from "../components/PrivateRoute";
 import ErrorPage from "./pages/ErrorPage";
-import { ArticleDetailPage, ArticlesPage, CreateArticlePage, EditArticlePage, EditProfilePage, PrivateRoute, SignInPage, SignUpPage } from "../lazyComponents";
+
+import {
+  ArticleDetailPage,
+  ArticlesPage,
+  CreateArticlePage,
+  EditArticlePage,
+  EditProfilePage,
+  SignInPage,
+  SignUpPage,
+} from "../lazyComponents";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

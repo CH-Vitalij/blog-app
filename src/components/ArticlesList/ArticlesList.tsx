@@ -1,5 +1,5 @@
 import { HeartOutlined } from "@ant-design/icons";
-import { Avatar, List, Button, Typography, Tag, Tooltip } from "antd";
+import { Avatar, List, Button, Typography, Tag, Tooltip, Spin } from "antd";
 import {
   useDeleteFavoriteMutation,
   useGetArticlesQuery,
@@ -10,7 +10,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { getToken } from "../../features/token";
 import { IArticles } from "../../types/articlesTypes";
 import { format } from "date-fns";
-import { enGB } from 'date-fns/locale'
+import { enGB } from "date-fns/locale";
 
 import HeartIcon from "../HeartIcon";
 import classes from "./ArticlesList.module.scss";
@@ -26,6 +26,7 @@ const ArticlesList = () => {
 
   const {
     data: articles,
+    isLoading: isLoadingArticles,
     isSuccess,
     isFetching,
     isError: isErrorArticles,
@@ -50,6 +51,7 @@ const ArticlesList = () => {
     }
   };
 
+  if (isLoadingArticles) return <Spin size="large" tip="Loading" fullscreen />;
   if (isErrorArticles || isErrorAddFavorite || isErrorDeleteFavorite)
     return <h1>Sorry, something went wrong</h1>;
   if (!isSuccess) return null;
