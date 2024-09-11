@@ -120,10 +120,7 @@ const ArticleDetailPage: React.FC = () => {
                 {format(new Date(article.createdAt), "MMMM d, yyyy", { locale: enGB })}
               </div>
             </div>
-            <Avatar
-              src={article.author.image !== pic ? article.author.image : avatar}
-              size={46}
-            />
+            <Avatar src={article.author.image !== pic ? article.author.image : avatar} size={46} />
             {username === article.author.username ? (
               <div>
                 <Popconfirm
