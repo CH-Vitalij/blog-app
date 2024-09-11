@@ -11,7 +11,7 @@ import { store } from "../store";
 import { AuthProvider } from "../context/AuthProvider";
 import { ConfigProvider } from "antd";
 
-import "../assets/styles/index.scss";
+import "../styles/index.scss";
 
 import HomePage from "./pages/HomePage";
 import PrivateRoute from "../components/PrivateRoute";
