@@ -42,9 +42,6 @@ const router = createBrowserRouter(
       </Route>
     </Route>,
   ),
-  {
-    basename: "/blog-app",
-  },
 );
 
 createRoot(document.getElementById("root")!).render(
