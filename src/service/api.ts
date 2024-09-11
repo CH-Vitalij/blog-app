@@ -43,7 +43,7 @@ export const api = createApi({
       query: (body) => ({ url: "users", method: "POST", body }),
     }),
     loginUser: builder.mutation<ILoginUserResponse, ILoginUserRequest>({
-      query: (body) => ({ url: "users/logins", method: "POST", body }),
+      query: (body) => ({ url: "users/login", method: "POST", body }),
     }),
     getUser: builder.query<IGetUserResponse, { token: string }>({
       query: ({ token }) => ({

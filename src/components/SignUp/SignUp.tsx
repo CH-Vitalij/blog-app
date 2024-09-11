@@ -26,13 +26,13 @@ const SignUp: FC = () => {
     setFocus("username");
   }, [setFocus]);
 
-  const onSubmit: SubmitHandler<IRegisterFormInput> = async (data) => {
+  const onSubmit: SubmitHandler<IRegisterFormInput> = async (formData) => {
     try {
       const result = await createUser({
         user: {
-          username: data.username,
-          email: data.email,
-          password: data.password,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
         },
       }).unwrap();
 

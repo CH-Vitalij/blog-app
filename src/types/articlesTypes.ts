@@ -47,3 +47,8 @@ export interface IArticleFormRequest {
     tagList: string[];
   };
 }
+
+export interface ArticleFormProps {
+  type?: string;
+  legend?: string;
+}

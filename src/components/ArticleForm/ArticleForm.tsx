@@ -1,6 +1,6 @@
 import { Form, Input, Button } from "antd";
 import { Controller, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { IArticleFormInput } from "../../types/articlesTypes";
+import { ArticleFormProps, IArticleFormInput } from "../../types/articlesTypes";
 import { getToken } from "../../features/token";
 import {
   useCreateArticleMutation,
@@ -12,11 +12,6 @@ import { FC } from "react";
 
 import classes from "./ArticleForm.module.scss";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-
-interface ArticleFormProps {
-  type?: string;
-  legend?: string;
-}
 
 const ArticleForm: FC<ArticleFormProps> = ({ type = "create", legend = "" }) => {
   const token = getToken() as string;

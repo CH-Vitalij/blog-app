@@ -7,10 +7,7 @@ import { useLoginUserMutation } from "../../service/api";
 import { isFetchBaseQueryError } from "../../features/isFetchBaseQueryError";
 import { ILoginFormInput, ILoginServerError } from "../../types/loginTypes";
 import { useAuth } from "../../hooks/useAuth";
-
-interface LocationState {
-  from?: string;
-}
+import { LocationState } from "../../types/locationState";
 
 const SignIn: FC = () => {
   const {
