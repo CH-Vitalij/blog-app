@@ -9,6 +9,8 @@ import { useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { getToken } from "../../features/token";
 import { IArticles } from "../../types/articlesTypes";
+import { format } from "date-fns";
+import { enGB } from 'date-fns/locale'
 
 import HeartIcon from "../HeartIcon";
 import classes from "./ArticlesList.module.scss";
@@ -143,7 +145,9 @@ const ArticlesList = () => {
                 <div className={`${classes.articlesItemBodyAuthorDataName}`}>
                   {item.author.username}
                 </div>
-                <div className={`${classes.articlesItemBodyAuthorDataDate}`}>March 5, 2020</div>
+                <div className={`${classes.articlesItemBodyAuthorDataDate}`}>
+                  {format(new Date(item.createdAt), "MMMM d, yyyy", { locale: enGB })}
+                </div>
               </div>
               <Avatar src={item.author.image !== pic ? item.author.image : avatar} size={46} />
             </div>
