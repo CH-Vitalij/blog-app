@@ -17,7 +17,7 @@ const Header: React.FC = () => {
 
   const handleLogOut = () => {
     signOut();
-    dispatch(api.util.resetApiState());
+    dispatch(api.util.resetApiState()); //
   };
 
   return (
