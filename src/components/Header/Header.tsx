@@ -1,20 +1,23 @@
 import { Link } from "react-router-dom";
 import { Avatar } from "antd";
 import { useAuth } from "../../hooks/useAuth";
-import { useGetUserQuery } from "../../service/api";
+import { api, useGetUserQuery } from "../../service/api";
 import { getToken } from "../../features/token";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 
 import avatar from "../../assets/img/avatar.svg";
 import classes from "./Header.module.scss";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 const Header: React.FC = () => {
   const { auth, signOut } = useAuth();
   const token = getToken() as string;
   const { data: fetchUserData } = useGetUserQuery(auth ? { token } : skipToken);
+  const dispatch = useAppDispatch();
 
   const handleLogOut = () => {
     signOut();
+    dispatch(api.util.resetApiState());
   };
 
   return (
