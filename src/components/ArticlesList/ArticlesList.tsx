@@ -114,18 +114,20 @@ const ArticlesList = () => {
                 {item.favoritesCount}
               </Button>
               <div style={{ display: "flex", gap: "8px" }}>
-                {item.tagList.map((el: string, i: number) => (
-                  <Tag key={item.slug + i} className={`${classes.articlesItemBodyTag}`}>
-                    <Tooltip
-                      title={el}
-                      destroyTooltipOnHide={true}
-                      color="rgb(0, 152, 255, 0.85)"
-                      placement="bottomLeft"
-                    >
-                      {el}
-                    </Tooltip>
-                  </Tag>
-                ))}
+                {item.tagList
+                  ? item.tagList.map((el: string, i: number) => (
+                      <Tag key={item.slug + i} className={`${classes.articlesItemBodyTag}`}>
+                        <Tooltip
+                          title={el}
+                          destroyTooltipOnHide={true}
+                          color="rgb(0, 152, 255, 0.85)"
+                          placement="bottomLeft"
+                        >
+                          {el}
+                        </Tooltip>
+                      </Tag>
+                    ))
+                  : null}
               </div>
               <Typography.Paragraph
                 className={`${classes.articlesItemBodyDescription}`}

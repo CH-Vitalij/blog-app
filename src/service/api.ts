@@ -7,7 +7,7 @@ import { IGetUserResponse } from "../types/userDataTypes";
 
 export const api = createApi({
   reducerPath: "Api",
-  tagTypes: ["Articles", "UserData"],
+  tagTypes: ["Articles", "Article", "UserData"],
   baseQuery: fetchBaseQuery({ baseUrl: "https://blog.kata.academy/api/" }),
   endpoints: (builder) => ({
     getArticles: builder.query<
@@ -37,7 +37,7 @@ export const api = createApi({
           headers,
         };
       },
-      providesTags: ["Articles", "UserData"],
+      providesTags: ["Article", "UserData"],
     }),
     registerUser: builder.mutation<IRegisterUserResponse, IRegisterUserRequest>({
       query: (body) => ({ url: "users", method: "POST", body }),
@@ -90,7 +90,7 @@ export const api = createApi({
         method: "PUT",
         body,
       }),
-      invalidatesTags: ["Articles"],
+      invalidatesTags: ["Article"],
     }),
     deleteArticle: builder.mutation<void, { slug: string; token: string }>({
       query: ({ slug, token }) => ({
@@ -100,24 +100,7 @@ export const api = createApi({
         },
         method: "DELETE",
       }),
-      async onQueryStarted({ slug, token }, { dispatch, queryFulfilled }) {
-        const resultArticles = dispatch(
-          api.util.updateQueryData(
-            "getArticles",
-            { limit: "5", offset: 0, token },
-            (draftArticles) => {
-              draftArticles.articles = draftArticles.articles.filter(
-                (article) => article.slug !== slug,
-              );
-            },
-          ),
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          resultArticles.undo();
-        }
-      },
+      invalidatesTags: ["Articles"],
     }),
     postFavorite: builder.mutation<IArticleResponse, { slug: string; token: string }>({
       query: ({ slug, token }) => ({
